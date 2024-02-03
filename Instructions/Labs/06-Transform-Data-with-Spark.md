@@ -18,20 +18,20 @@ Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
 ## Provisionar um workspace do Azure Synapse Analytics
 
-Você precisará de um workspace do Azure Synapse Analytics com acesso ao Data Lake Storage e um pool do Spark.
+Você precisará de um workspace do Azure Synapse Analytics com acesso ao armazenamento de data lake e um pool do Spark.
 
 Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um novo Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um Cloud Shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do Cloud Shell para alterá-la para ***PowerShell***.
+    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
-4. No painel do PowerShell, insira os seguintes comandos para clonar este repositório:
+4. No painel do PowerShell, insira os seguintes comandos para clonar esse repositório:
 
     ```
     rm -r dp-203 -f
@@ -63,9 +63,10 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 7. Selecione o contêiner **arquivos** e observe que ele contém pastas chamadas **dados** e **synapse**. A pasta synapse é usada pelo Azure Synapse e a pasta **dados** contém os arquivos de dados que você vai consultar.
 8. Abra a pasta **dados** e observe que ela contém arquivos .csv referentes a três anos de dados de vendas.
 9. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos contêm uma linha de cabeçalho; você pode selecionar a opção para exibir cabeçalhos de coluna.
-10. Feche a versão preliminar. Em seguida, baixe o **Spark Transform.ipynb** de [https://raw.githubusercontent.com/MicrosoftLearning/dp-203-azure-data-engineer/master/Allfiles/labs/06/notebooks/Spark%20Transform.ipynb](https://raw.githubusercontent.com/MicrosoftLearning/dp-203-azure-data-engineer/master/Allfiles/labs/06/notebooks/Spark%20Transform.ipynb)
+10. Feche a versão preliminar. Em seguida, baixe o **Spark Transform.ipynb** de [from Allfiles/labs/06/notebooks](https://github.com/MicrosoftLearning/dp-203-azure-data-engineer/tree/master/Allfiles/labs/06/notebooks)
 
-    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***.
+    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também pode baixar o arquivo clicando nele, selecionando as reticências e baixar e, em seguida, lembrando onde você o salvou.
+    ![Baixar notebook Spark do GitHub](./images/select-download-notebook.png)
 
 11. Em seguida, na página **Desenvolver**, expanda **Notebooks**, clique em + Importar opções
 
@@ -83,8 +84,8 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 
 1. Feche a guia do navegador do Synapse Studio e retorne ao portal do Azure.
 2. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
-3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o seu workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento e o pool do Spark para seu workspace.
+3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento e o pool do Spark para seu workspace.
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
