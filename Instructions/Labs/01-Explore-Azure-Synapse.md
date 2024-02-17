@@ -25,7 +25,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um shell de nuvem que usa um ambiente *Bash* , use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
+    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -44,7 +44,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
     ```
 
 6. Se solicitado, escolha qual assinatura você deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
-7. Quando solicitado, insira uma senha adequada a ser definida para seu pool SQL do Azure Synapse.
+7. Quando solicitado, insira uma senha adequada a ser definida para seu pool de SQL do Azure Synapse.
 
     > **Observação**: Memorize a senha. Além disso, a senha não pode conter todo ou parte do nome de login.
 
@@ -73,8 +73,6 @@ O *Synapse Studio* é um portal baseado na Web no qual você pode gerenciar e tr
         - **sql*xxxxxxx***: Um pool SQL *dedicado* que hospeda um banco de dados de data warehouse relacional.
     - **Pools do Apache Spark**:
         - **spark*xxxxxxx***: que você pode usar sob demanda para explorar ou processar dados em um data lake usando linguagens de programação como Scala ou Python.
-<!---    - **Data Explorer pools**:
-        - **adx*xxxxxxx***: A Data Explorer pool that you can use to analyze data by using Kusto Query Language (KQL). --->
 
 ## Ingerir dados com um pipeline
 
@@ -439,4 +437,4 @@ Agora que você terminou de explorar Azure Synapse Analytics, exclua os recursos
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
