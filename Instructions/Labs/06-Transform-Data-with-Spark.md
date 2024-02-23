@@ -65,7 +65,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 9. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos contêm uma linha de cabeçalho; você pode selecionar a opção para exibir cabeçalhos de coluna.
 10. Feche a versão preliminar. Em seguida, baixe o **Spark Transform.ipynb** de [from Allfiles/labs/06/notebooks](https://github.com/MicrosoftLearning/dp-203-azure-data-engineer/tree/master/Allfiles/labs/06/notebooks)
 
-    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também pode baixar o arquivo clicando nele, selecionando as reticências e baixar e, em seguida, lembrando onde você o salvou.
+    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também pode baixar o arquivo clicando nele, selecionando as reticências (...) e baixar e, em seguida, lembrando onde você o salvou.
     ![Baixar notebook Spark do GitHub](./images/select-download-notebook.png)
 
 11. Em seguida, na página **Desenvolver**, expanda **Notebooks**, clique em + Importar opções
