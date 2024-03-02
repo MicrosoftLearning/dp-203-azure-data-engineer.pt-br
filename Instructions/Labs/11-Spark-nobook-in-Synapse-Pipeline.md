@@ -64,7 +64,7 @@ Antes de automatizar um processo de transformação de dados com um bloco de ano
 8. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos contêm uma linha de cabeçalho; você pode selecionar a opção para exibir cabeçalhos de coluna.
 9. Feche a versão preliminar. Em seguida, baixe o **Spark Transform.ipynb** [de Allfiles/labs/11/notebooks](https://github.com/MicrosoftLearning/dp-203-azure-data-engineer/tree/master/Allfiles/labs/11/notebooks)
 
-    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também pode selecionar o arquivo no GitHub, selecionar as reticências e depois baixá-lo, salvando-o em um local que você lembre facilmente. 
+    > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também tem a opção de selecionar o arquivo no GitHub e, em seguida, selecionar as reticências (...) e selecionar **Baixar**, salvando-o em um local que você possa lembrar. 
     ![baixar o arquivo notebook do GitHub](./images/select-download-notebook.png)
 
 10 Em seguida, na página **Desenvolver**, expanda **Notebooks** e clique nas opções + Importar

@@ -21,15 +21,15 @@ Para dar suporte a um banco de dados lake, você precisa de um espaço de trabal
 Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash* , use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
+    > **Observação**: Se você tiver criado anteriormente um shell de nuvem que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do shell de nuvem para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
-4. No painel do PowerShell, insira os seguintes comandos para executar esse repositório:
+4. No painel do PowerShell, insira os seguintes comandos para clonar esse repositório:
 
     ```
     rm -r dp-203 -f
@@ -44,7 +44,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
     ```
 
 6. Se solicitado, escolha qual assinatura você deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
-7. Quando solicitado, insira uma senha adequada a ser definida para seu pool SQL do Azure Synapse.
+7. Quando solicitado, insira uma senha adequada a ser definida para seu pool de SQL do Azure Synapse.
 
     > **Observação**: Memorize a senha.
 
@@ -52,8 +52,8 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
 ## Modificar permissões de contêiner
 
-1. Depois que o script de implantação for concluído, no portal do Azure, vá para o grupo de recursos **dp203-*xxxxxxx*** que ele criou e observe que esse grupo de recursos contém seu workspace Synapse, uma conta de Armazenamento para seu data lake e um pool do Apache Spark.
-1. Selecione a **Conta de armazenamento** para o data lake chamado **datalakexxxxxxx** 
+1. Após a conclusão do script de implantação, no portal do Microsoft Azure, acesse o grupo de recursos **dp203-*xxxxxxx*** que ele criou e observe que esse grupo de recursos contém o workspace do Synapse, uma conta de Armazenamento do Microsoft Data Lake e um pool do Apache Spark.
+1. Selecione a **conta de armazenamento** para seu data lake chamado **datalakexxxxxxx** 
 
      ![Navegação do data lake para o contêiner](./images/datalakexxxxxx-storage.png)
 
@@ -61,7 +61,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
     ![Selecione a pasta de arquivos dentro do contêiner do data lake](./images/dp203-Container.png)
 
-1. Dentro da **pasta de arquivos**, você observará que o **Método de autenticação:** está listado como ***Chave de acesso (Alternar para a Conta de Usuário do Azure AD),*** clique nisso para alterar para a Conta de Usuário do Azure AD.
+1. Na pasta **arquivos**, você notará que o **Método de autenticação:** está listado como ***Chave de acesso (Alternância para Conta de usuário do Entra)*** e clique nela para alterar para Conta de usuário do Entra.
 
     ![Alternar para a Conta de Usuário do Azure AD](./images/dp203-switch-to-aad-user.png)
 ## Criar um banco de dados Lake
@@ -98,15 +98,15 @@ Agora que você criou um banco de dados lake, defina seu esquema criando tabelas
     | Nome | simétricas | Descrição | Nulidade | Tipo de dados | Formato / Comprimento |
     | ---- | ---- | ----------- | ----------- | --------- | --------------- |
     | CustomerId | PK &#128505; | ID de cliente exclusivo | &#128454;  | longo | |
-    | **FirstName** | **PK &#128454;** | **Nome do cliente** | **&#128454;** | **cadeia de caracteres** | **256** |
+    | **Nome** | **PK &#128454;** | **Nome do cliente** | **&#128454;** | **cadeia de caracteres** | **256** |
 
 6. Adicione mais novas colunas até que a definição da tabela tenha esta aparência:
 
     | Nome | simétricas | Descrição | Nulidade | Tipo de dados | Formato / Comprimento |
     | ---- | ---- | ----------- | ----------- | --------- | --------------- |
     | CustomerId | PK &#128505; | ID de cliente exclusivo | &#128454;  | longo | |
-    | FirstName | PK &#128454; | Nome do cliente | &#128454; | string | 256 |
-    | LastName | PK &#128454; | Sobrenome do cliente | &#128505; | string | 256 |
+    | Nome | PK &#128454; | Nome do cliente | &#128454; | string | 256 |
+    | Sobrenome | PK &#128454; | Sobrenome do cliente | &#128505; | string | 256 |
     | EmailAddress | PK &#128454; | Email do cliente | &#128454; | string | 256 |
     | o Telefone | PK &#128454; | Telefone do cliente | &#128505; | string | 256 |
 
@@ -147,11 +147,11 @@ Como você viu, você pode criar as tabelas necessárias em seu banco de dados L
     | Nome | simétricas | Descrição | Nulidade | Tipo de dados | Formato / Comprimento |
     | ---- | ---- | ----------- | ----------- | --------- | --------------- |
     | ProductId | PK &#128505; | Um identificador exclusivo para um produto. | &#128454;  | longo | |
-    | ProductName | PK &#128454; | O nome do produto... | &#128505; | string | 128 |
+    | ProductName | PK &#128454; | O nome do Produto... | &#128505; | string | 128 |
     | IntroductionDate | PK &#128454; | A data em que o Produto foi introduzido para venda. | &#128505; | date | AAAA-MM-DD |
     | ActualAbandonmentDate | PK &#128454; | A data real em que a comercialização do produto foi interrompida... | &#128505; | date | AAA-MM-DD |
     | ProductGrossWeight | PK &#128454; | O peso bruto do produto. | &#128505; | decimal | 18,8 |
-    | ItemSku | PK &#128454; | O identificador da Unidade de Manutenção de Estoque... | &#128505; | string | 20 |
+    | ItemSku | PK &#128454; | O Identificador da Unidade de Manutenção de Estoque... | &#128505; | string | 20 |
 
 8. Adicione uma nova coluna chamada **ListPrice** à tabela, conforme mostrado aqui:
 
@@ -220,7 +220,7 @@ Até agora, você criou tabelas e as preencheu com dados. Em alguns casos, talve
 
     | Da tabela | Da coluna | Para a tabela | Para a coluna |
     | ---- | ---- | ----------- | ----------- |
-    | Cliente | CustomerId | Pedido de Venda | CustomerId |
+    | Customer | CustomerId | Pedido de Venda | CustomerId |
 
 6. Adicione uma segunda relação *Para a tabela* com as seguintes configurações:
 
@@ -289,4 +289,4 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
