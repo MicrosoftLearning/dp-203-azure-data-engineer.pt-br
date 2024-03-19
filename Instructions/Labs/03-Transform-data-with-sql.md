@@ -6,7 +6,7 @@ lab:
 
 # Transformar arquivos usando um pool de SQL sem servidor
 
-Os *analistas* de dados geralmente usam SQL para consultar dados para análise e relatórios. Os *engenheiros* de dados também podem usar o SQL para manipular e transformar dados, muitas vezes como parte de um pipeline de ingestão de dados ou de um processo de ETL (extração, transformação e carregamento).
+Os *analistas* de dados geralmente usam SQL para consultar dados para análise e relatórios. Os *engenheiros* de dados também podem fazer uso do SQL para manipular e transformar dados, muitas vezes como parte de um pipeline de ingestão de dados ou processo de extração, transformação e carregamento (ETL).
 
 Neste exercício, você usará um pool de SQL sem servidor no Azure Synapse Analytics para transformar dados em arquivos.
 
@@ -18,12 +18,12 @@ Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
 ## Provisionar um workspace do Azure Synapse Analytics
 
-Você precisará de um workspace do Azure Synapse Analytics com acesso ao armazenamento do data lake. Você pode usar o pool de SQL interno sem servidor para consultar arquivos no data lake.
+Você precisará de um espaço de trabalho do Azure Synapse Analytics com acesso ao armazenamento de data lake. Você pode usar o pool do SQL interno sem servidor para consultar arquivos no data lake.
 
-Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
+Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um espaço de trabalho do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
@@ -38,42 +38,42 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
     git clone https://github.com/MicrosoftLearning/dp-203-azure-data-engineer dp-203
     ```
 
-5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar para a pasta deste exercício e execute o script **setup.ps1** que ela contém:
+5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar para a pasta deste exercício e execute o script **setup.ps1** que ele contém:
 
     ```
     cd dp-203/Allfiles/labs/03
     ./setup.ps1
     ```
 
-6. Se solicitado, escolha qual assinatura deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
+6. Se solicitado, escolha qual assinatura você deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
 7. Quando solicitado, insira uma senha adequada a ser definida para seu pool de SQL do Azure Synapse.
 
-    > **Observação**: memorize essa senha.
+    > **Observação**: Memorize a senha.
 
-8. Aguarde a conclusão do script. Isso normalmente leva cerca de 10 minutos, mas em alguns casos pode demorar mais. Enquanto espera, revise o artigo [CETAS com SQL do Synapse](https://docs.microsoft.com/azure/synapse-analytics/sql/develop-tables-cetas) na documentação do Azure Synapse Analytics.
+8. Aguarde a conclusão do script - isso normalmente leva cerca de 10 minutos, mas em alguns casos pode levar mais tempo. Enquanto espera, revise o artigo [CETAS com Synapse SQL](https://docs.microsoft.com/azure/synapse-analytics/sql/develop-tables-cetas) na documentação do Azure Synapse Analytics.
 
 ## Consultar dados em arquivos
 
-O script provisiona um workspace do Azure Synapse Analytics e uma conta de Armazenamento do Azure para hospedar o data lake e, em seguida, faz o upload de alguns arquivos de dados o data lake.
+O script provisiona um espaço de trabalho do Azure Synapse Analytics e uma conta de Armazenamento do Azure para hospedar o data lake e, em seguida, carrega alguns arquivos de dados no data lake.
 
 ### Exibir arquivos no data lake
 
-1. Depois que o script for concluído, no portal do Azure, vá para o grupo de recursos **dp203-*xxxxxxx*** que ele criou e selecione seu workspace do Synapse.
-2. Na página **Visão Geral** do seu workspace do Synapse, no cartão **Abrir o Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
-3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, o que revela as diferentes páginas do Synapse Studio usadas para gerenciar recursos e executar tarefas de análise de dados.
-4. Na página **Data**, veja a guia **Vinculado** e verifique se seu workspace inclui um link para sua conta de armazenamento do Azure Data Lake Storage Gen2, que deve ter um nome semelhante à **synapse*xxxxxxx* (Principal - datalake*xxxxxxx*)**.
+1. Depois que o script for concluído, no portal do Azure, vá para o Azure Storage **dp203-*xxxxxxx*** que ele criou e selecione seu espaço de trabalho Synapse.
+2. Na página **Visão geral** do seu workspace do Synapse, no cartão **Abrir o Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
+3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu – o que revela as diferentes páginas do Synapse Studio usadas para gerenciar recursos e executar tarefas de análise de dados.
+4. Na página **Dados**, exiba a guia **Vinculado** e verifique se seu workspace inclui um link para sua conta de armazenamento do Azure Data Lake Storage Gen2, que deve ter um nome semelhante à **synapse*xxxxxxx* (Primary - datalake*xxxxxxx*)**.
 5. Expanda sua conta de armazenamento e verifique se ela contém um contêiner do sistema de arquivos chamado **arquivos**.
-6. Selecione o contêiner **arquivos** e observe que ele contém uma pasta chamada **vendas**. Esta pasta contém os arquivos de dados que você vai consultar.
-7. Abra a pasta **vendas** e a pasta **csv** que ela contém e observe que essa pasta contém arquivos .csv com três anos de dados de vendas.
+6. Selecione o contêiner de **arquivos** e observe que ele contém uma pasta chamada **vendas**. Esta pasta contém os arquivos de dados que você vai consultar.
+7. Abra a pasta de **vendas** e a pasta **csv** que ela contém e observe que essa pasta contém arquivos .csv para três anos de dados de vendas.
 8. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos contêm uma linha de cabeçalho.
-9. Feche a visualização e use o botão **↑** para navegar de volta para a pasta **vendas**.
+9. Feche a visualização e use o botão **↑** para navegar de volta para a pasta de **vendas**.
 
 ### Usar o SQL para consultar arquivos CSV
 
-1. Selecione a pasta **csv** e, em seguida, na lista **Novo script SQL** na barra de ferramentas, selecione **Selecionar as 100 PRIMEIRAS linhas**.
+1. Selecione a pasta **csv** e, na lista **Novo script SQL** na barra de ferramentas, selecione **Selecionar as 100 PRIMEIRAS LINHAS**.
 2. Na lista **Tipo de arquivo**, selecione **Formato de texto** e aplique as configurações para abrir um novo script SQL que consulta os dados na pasta.
-3. No painel **Propriedades** do **Script SQL 1** criado, altere o nome para **Consulta de arquivos CSV de vendas** e altere as configurações do resultado para mostrar **Todas as linhas**. Em seguida, na barra de ferramentas, selecione **Publicar** para salvar o script e use o botão **Propriedades** (que se parece com **<sub>*</sub>**) na extremidade direita da barra de ferramentas para ocultar o painel **Propriedades**.
-4. Revise o código de SQL gerado, que deve ser semelhante a este:
+3. No painel **Propriedades** do **SQL Script 1** criado, altere o nome para **Arquivos CSV de Vendas de Consulta** e altere as configurações de resultado para mostrar **Todas as linhas**. Em seguida, na barra de ferramentas, selecione **Publicar** para salvar o script e use o botão **Propriedades** (que se parece com **<sub>*</sub>**) na extremidade direita da barra de ferramentas para ocultar o painel **Propriedades**.
+4. Revise o código de SQL que foi gerado, que deve ser semelhante a este:
 
     ```SQL
     -- This is auto-generated code
@@ -87,9 +87,9 @@ O script provisiona um workspace do Azure Synapse Analytics e uma conta de Armaz
         ) AS [result]
     ```
 
-    Esse código usa o OPENROWSET para ler dados dos arquivos CSV na pasta vendas e recupera as primeiras 100 linhas de dados.
+    Esse código usa o OPENROWSET para ler dados dos arquivos CSV na pasta de vendas e recupera as primeiras 100 linhas de dados.
 
-5. Nesse caso, os arquivos de dados incluem os nomes das colunas na primeira linha, portanto, modifique a consulta para adicionar um parâmetro `HEADER_ROW = TRUE` à cláusula `OPENROWSET`, como mostrado aqui (não se esqueça de adicionar uma vírgula após o parâmetro anterior):
+5. Nesse caso, os arquivos de dados incluem os nomes das colunas na primeira linha; Portanto, modifique a consulta para adicionar um parâmetro `HEADER_ROW = TRUE` à cláusula `OPENROWSET`, como mostrado aqui (não se esqueça de adicionar uma vírgula após o parâmetro anterior):
 
     ```SQL
     SELECT
@@ -103,7 +103,7 @@ O script provisiona um workspace do Azure Synapse Analytics e uma conta de Armaz
         ) AS [result]
     ```
 
-6. Na lista **Conectar-se a**, verifique se **Interno** está selecionado — isso representa o Pool de SQL interno que foi criado com o seu workspace. Na barra de ferramentas, use o botão **&#9655; Executar** para executar o código SQL e examine os resultados, que devem ser semelhantes a este:
+6. Na lista **Conectar-se a**, verifique se **Interno** está selecionado — isso representa o Pool de SQL interno que foi criado com o seu workspace. Na barra de ferramentas, use o botão **▷ Executar** para executar o código SQL e examine os resultados, que devem ser semelhantes a este:
 
     | SalesOrderNumber | SalesOrderLineNumber | OrderDate | CustomerName | EmailAddress | Item | Quantidade | UnitPrice | TaxAmount |
     | -- | -- | -- | -- | -- | -- | -- | -- | -- |
@@ -112,15 +112,15 @@ O script provisiona um workspace do Azure Synapse Analytics e uma conta de Armaz
 
 7. Publique as alterações no script e feche o painel de script.
 
-## Transformar dados usando as instruções CETAS (CREATE EXTERNAL TABLE AS SELECT)
+## Transformar dados usando instruções CREATE EXTERNAL TABLE AS SELECT (CETAS)
 
-Uma maneira simples de usar o SQL para transformar dados em um arquivo e manter os resultados em outro arquivo é usar uma instrução CETAS (CREATE EXTERNAL TABLE AS SELECT). Essa instrução cria uma tabela com base nas solicitações de uma consulta, mas os dados da tabela são armazenados como arquivos em um data lake. Os dados transformados podem então ser consultados por meio da tabela externa ou acessados diretamente no sistema de arquivos (por exemplo, para inclusão em um processo downstream para carregar os dados transformados em um data warehouse).
+Uma maneira simples de usar o SQL para transformar dados em um arquivo e persistir os resultados em outro arquivo é usar uma instrução CREATE EXTERNAL TABLE AS SELECT (CETAS). Essa instrução cria uma tabela com base nas solicitações de uma consulta, mas os dados da tabela são armazenados como arquivos em um data lake. Os dados transformados podem então ser consultados por meio da tabela externa ou acessados diretamente no sistema de arquivos (por exemplo, para inclusão em um processo downstream a fim de carregar os dados transformados em um data warehouse).
 
 ### Criar uma fonte de dados externa e um formato de arquivo
 
-Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la para fazer referência ao local do data lake onde deseja armazenar arquivos para tabelas externas. Um formato de arquivo externo permite que você defina o formato para esses arquivos, por exemplo, Parquet ou CSV. Para usar esses objetos a fim de trabalhar com tabelas externas, você precisa criá-los em um banco de dados diferente do banco de dados **principal** padrão.
+Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la para fazer referência ao local do data lake onde deseja armazenar arquivos para tabelas externas. Um formato de arquivo externo permite que você defina o formato para esses arquivos - por exemplo, Parquet ou CSV. Para usar esses objetos a fim de trabalhar com tabelas externas, você precisa criá-los em um banco de dados diferente do banco de dados **mestre** padrão.
 
-1. No Synapse Studio, na página **Desenvolver**, no menu **+**, selecione **script SQL**.
+1. No Synapse Studio, na página **Desenvolver**, no menu ****+, selecione **Script SQL**.
 2. No novo painel de script, adicione o seguinte código (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) para criar um novo banco de dados e adicionar uma fonte de dados externa a ele.
 
     ```sql
@@ -147,15 +147,15 @@ Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la p
     GO;
     ```
 
-3. Modifique as propriedades do script para alterar seu nome para **Criar DB de Vendas** e publique-o.
-4. Verifique se o script está conectado ao pool de SQL **Interno** e ao banco de dados **principal** e execute-o novamente.
-5. Volte para a página **Dados** e use o botão **↻** no canto superior direito do Synapse Studio para atualizar a página. Em seguida, veja a guia **Workspace** no painel **Dados**, onde uma lista do **banco de dados SQL** é exibida agora. Expanda essa lista para verificar se o banco de dados **Vendas** foi criado.
+3. Modifique as propriedades do script para alterar seu nome para **Create Sales DB** e publique.
+4. Verifique se o script está conectado ao pool SQL **interno** e ao banco de dados **mestre** e execute-o.
+5. Volte para a página **Dados** e use o botão **↻** no canto superior direito do Synapse Studio para atualizar a página. Em seguida, exiba a guia **Espaço de trabalho** no painel **Dados**, onde uma lista **banco de dados SQL** agora é exibida. Expanda essa lista para verificar se o banco de dados **Vendas** foi criado.
 6. Expanda o banco de dados **Vendas**, sua pasta **Recursos Externos** e a pasta **Fontes de dados externas** para ver a fonte de dados externa **sales_data** que você criou.
 
 ### Criar uma tabela externa
 
-1. No Synapse Studio, na página **Desenvolver**, no menu **+**, selecione **script SQL**.
-2. No novo painel de script, adicione o seguinte código para recuperar e agregar dados dos arquivos de vendas CSV usando a fonte de dados externa, observando que o caminho **BULK** é relativo ao local da pasta no qual a fonte de dados está definida:
+1. No Synapse Studio, na página **Desenvolver**, no menu ****+, selecione **Script SQL**.
+2. No novo painel de script, adicione o seguinte código para recuperar e agregar dados dos arquivos de vendas CSV usando a fonte de dados externa - observando que o caminho **BULK** é relativo ao local da pasta no qual a fonte de dados está definida:
 
     ```sql
     USE Sales;
@@ -179,7 +179,7 @@ Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la p
 
     | Product | ItemsSold | NetRevenue |
     | -- | -- | -- |
-    | AWC Logo Cap | 1063 | 8791,86 |
+    | AWC Logo Cap | 1063 | 8791.86 |
     | ... | ... | ... |
 
 4. Modifique o código SQL para salvar os resultados da consulta em uma tabela externa, da seguinte forma:
@@ -207,17 +207,17 @@ Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la p
     ```
 
 5. Execute o script. Desta vez, não há saída, mas o código deve ter criado uma tabela externa com base nos resultados da consulta.
-6. Nomeie o script **Criar tabela ProductSalesTotals** e publique-o.
-7. Na página **dados**, na guia **Workspace**, veja o conteúdo da pasta **Tabelas externas** para o banco de dados SQL **Vendas** a fim de verificar se uma nova tabela chamada **ProductSalesTotals** foi criada.
-8. No menu **...** para a tabela **ProductSalesTotals**, selecione **Novo script SQL** > **Selecionar as 100 PRIMEIRAS linhas**. Em seguida, execute o script resultante e verifique se ele retorna os dados agregados de vendas do produto.
-9. Na guia **arquivos** que contém o sistema de arquivos do seu data lake, veja o conteúdo da pasta **vendas** (atualizando a exibição, se necessário) e verifique se uma nova pasta **productsales** foi criada.
-10. Na pasta **productsales**, observe que um ou mais arquivos com nomes semelhantes a ABC123DE----.parquet foram criados. Esses arquivos contêm os dados agregados de vendas do produto. Para provar isso, você pode selecionar um dos arquivos e usar o menu **Novo script SQL** > **Selecionar as 100 PRIMEIRAS LINHAS** para consultá-lo diretamente.
+6. Nomeie o script **Create ProductSalesTotals table** e publique-o.
+7. Na página **dados**, na guia **Espaço de trabalho**, consulte o conteúdo da pasta **Tabelas externas** do banco de dados SQL **Vendas** para verificar se uma nova tabela chamada **ProductSalesTotals** foi criada.
+8. No menu **...** para a tabela **ProductSalesTotals**, selecione **Novo script SQL** > **Selecionar as 100 PRIMEIRAS LINHAS**. Em seguida, execute o script resultante e verifique se ele retorna os dados agregados de vendas do produto.
+9. Na guia **arquivos** que contém o sistema de arquivos do seu data lake, consulte o conteúdo da pasta **vendas** (atualizando a visualização, se necessário) e verifique se uma nova pasta **productsales** foi criada.
+10. Na pasta **productsales**, observe que um ou mais arquivos com nomes semelhantes a ABC123DE----.parquet foram criados. Esses arquivos contêm os dados agregados de vendas do produto. Para provar isso, selecione um dos arquivos e use o menu **Novo script SQL** > **Selecione 100 linhas prinicipais** para consultar diretamente.
 
 ## Encapsular transformações de dados em um procedimento armazenado
 
 Se você precisar transformar dados com frequência, use um procedimento armazenado para encapsular uma instrução CETAS.
 
-1. No Synapse Studio, na página **Desenvolver**, no menu **+**, selecione **script SQL**.
+1. No Synapse Studio, na página **Desenvolver**, no menu ****+, selecione **Script SQL**.
 2. No novo painel de script, adicione o seguinte código para criar um procedimento armazenado no banco de dados **Vendas** que agrega vendas por ano e salva os resultados em uma tabela externa:
 
     ```sql
@@ -262,15 +262,15 @@ Se você precisar transformar dados com frequência, use um procedimento armazen
     EXEC sp_GetYearlySales;
     ```
 
-5. Selecione apenas a instrução `EXEC sp_GetYearlySales;` que você acabou de adicionar e use o botão **▷ Executar** para executá-la.
-6. Na guia **arquivos** que contém o sistema de arquivos para seu data lake, veja o conteúdo da pasta **vendas** (atualizando a exibição, se necessário) e verifique se uma nova pasta **yearlysales** foi criada.
-7. Na pasta **yearlysales**, observe que um arquivo parquet contendo os dados agregados de vendas anuais foi criado.
-8. Volte para o script SQL e execute a instrução `EXEC sp_GetYearlySales;` novamente e observe que ocorre um erro.
+5. Selecione apenas a instrução `EXEC sp_GetYearlySales;` que você acabou de adicionar e use o botão **▷ Executar** para executá-lo.
+6. Na guia **arquivos** que contém o sistema de arquivos para seu data lake, exiba o conteúdo da pasta **vendas** (atualizando a exibição, se necessário) e verifique se uma nova pasta **yearlysales** foi criada.
+7. Na pasta **yearlysales**, observe que um arquivo parquet contendo os dados de vendas anuais agregados foi criado.
+8. Volte para o script SQL e execute novamente a instrução `EXEC sp_GetYearlySales;` e observe que ocorre um erro.
 
     Mesmo que o script descarte a tabela externa, a pasta que contém os dados não é excluída. Para executar novamente o procedimento armazenado (por exemplo, como parte de um pipeline de transformação de dados agendado), exclua os dados antigos.
 
-9. Volte para a guia **arquivos** e veja a pasta **vendas**. Em seguida, selecione a pasta **yearlysales** e exclua-a.
-10. Volte para o script SQL e execute a instrução `EXEC sp_GetYearlySales;` novamente. Desta vez, a operação é bem-sucedida e um novo arquivo de dados é gerado.
+9. Volte para a guia **arquivos** e exiba a pasta **vendas**. Em seguida, selecione a pasta **yearlysales** e exclua-a.
+10. Volte para o script SQL e execute novamente a instrução `EXEC sp_GetYearlySales;`. Desta vez, a operação é bem-sucedida e um novo arquivo de dados é gerado.
 
 ## Excluir recursos do Azure
 
@@ -282,4 +282,4 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
