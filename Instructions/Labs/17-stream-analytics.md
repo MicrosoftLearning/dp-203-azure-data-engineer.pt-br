@@ -21,7 +21,7 @@ Neste exercício, você capturará um fluxo de dados de transações de vendas s
 Você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar esses recursos.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
@@ -76,7 +76,7 @@ Agora você está pronto para criar um trabalho do Azure Stream Analytics para p
         - **Unidades de streaming**: 1
     - **Armazenamento**:
         - **Adicionar conta de armazenamento**: Não selecionado
-    - **Marcas:**
+    - **Tags:**
         - *Nenhuma*
 2. Aguarde a conclusão da implantação e acesse o recurso de trabalho do Stream Analytics implantado.
 
@@ -193,6 +193,6 @@ Se você terminou de explorar o Azure Stream Analytics, exclua os recursos que c
 1. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
 2. Selecione o grupo de recursos **dp203-*xxxxxxx*** que contém seus recursos de Armazenamento do Azure, Hubs de Eventos e Stream Analytics.
 3. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
-4. Digite o nome do grupo de recursos **dp203-*xxxxxxx***para confirmar que deseja excluí-lo e selecione **Excluir**.
+4. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
     Após alguns minutos, os recursos criados neste exercício serão excluídos.

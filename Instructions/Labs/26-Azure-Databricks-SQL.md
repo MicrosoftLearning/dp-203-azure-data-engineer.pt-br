@@ -18,12 +18,14 @@ Você precisará de uma [assinatura do Azure](https://azure.microsoft.com/free) 
 
 Neste exercício, você precisará de um workspace do Azure Databricks de nível premium.
 
-1. Em um navegador, entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
+> **Dica**: se você já tiver um workspace do Azure Databricks *Premium* ou de *Avaliação*, pule este procedimento.
+
+1. Em um navegador da web, faça logon no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
 2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash* , use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
+    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -34,7 +36,7 @@ Neste exercício, você precisará de um workspace do Azure Databricks de nível
     git clone https://github.com/MicrosoftLearning/dp-203-azure-data-engineer dp-203
     ```
 
-5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar para a pasta deste laboratório e execute o **script setup.ps1** que ele contém:
+5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar para a pasta deste laboratório e execute o script **setup.ps1** que ele contém:
 
     ```
     cd dp-203/Allfiles/labs/26
@@ -48,12 +50,12 @@ Neste exercício, você precisará de um workspace do Azure Databricks de nível
 ## Exibir e iniciar um SQL Warehouse
 
 1. Quando o recurso de workspace do Azure Databricks tiver sido implantado, vá para ele no portal do Azure.
-2. Na página **Visão geral** do seu workspace do Azure Databricks, use o botão **Iniciar Workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador; entrando se solicitado.
-3. Se uma mensagem **Qual é o seu projeto de dados atual?** for exibida, selecione **Concluir** para fechá-la. Em seguida, exiba o portal do workspace do Azure Databricks e observe que a barra lateral no lado esquerdo contém os nomes das categorias de tarefa.
+1. Na página **Visão geral** do seu workspace do Azure Databricks, use o botão **Iniciar workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador, fazendo logon se solicitado.
 
-    >**Dica**: Ao usar o portal do Workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-as e siga as instruções fornecidas para concluir as tarefas neste exercício.
+    > **Dica**: ao usar o portal do workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-as e siga as instruções fornecidas para concluir as tarefas neste exercício.
 
-1. Na barra lateral, em **SQL**, selecione **SQL Warehouses**.
+1. Veja o portal do workspace do Azure Databricks e observe que a barra lateral no lado esquerdo contém os nomes das categorias de tarefas.
+1. Na barra lateral, em **SQL**, selecione **SQL warehouses**.
 1. Observe que o workspace já inclui um SQL Warehouse chamado **Warehouse Inicial**.
 1. No menu **Ações** (**⁝**) do SQL Warehouse, selecione **Editar**. Em seguida, defina a propriedade **Tamanho do cluster** como **2X-Small** e salve as alterações.
 1. Use o botão **Iniciar** para iniciar o SQL Warehouse (o que pode levar um ou dois minutos).
@@ -106,17 +108,15 @@ Salvar uma consulta facilita a recuperação dos mesmos dados novamente posterio
 1. Na barra lateral, selecione **(+) Novo** e, em seguida, selecione **Painel**.
 2. Na caixa de diálogo **Novo painel**, digite o nome **Produtos da Adventure Works** e selecione **Salvar**.
 3. No painel **Produtos da Adventure Works**, na lista suspensa **Adicionar**, selecione **Visualização**.
-4. Na caixa de diálogo **Adicionar widget de visualização**, selecione a consulta **Produtos e Categorias**. Em seguida, selecione **Criar nova visualização** e defina o título como **Produtos por categoria**. e selecione **Criar visualização**.
+4. Na caixa de diálogo **Adicionar widget de visualização**, selecione a consulta **Produtos e categorias**. Em seguida, selecione **Criar nova visualização**, defina o título como **Produtos por categoria** e selecione **Criar visualização**.
 5. No editor de visualização, defina as seguintes propriedades:
     - **Tipo de visualização**: barra
     - **Gráfico horizontal**: selecionado
     - **Coluna Y**: Categoria
-    - **Colunas X**: ID de Produto : Contagem
-    - **Agrupar por**: Categoria
-    - **Posicionamento da legenda**: Automático (Flexível)
-    - **Ordem dos itens de legenda**: Normal
-    - **Empilhamento**: Pilha
-    - **Normalizar valores para porcentagem**: <u>Não</u> selecionado
+    - **Colunas X**: ID do produto (product ID) : contagem
+    - **Agrupar por**: *deixar em branco*
+    - **Empilhamento**: desativado
+    - **Normalizar valores para porcentagem**: <u>não</u> selecionado
     - **Valores ausentes e NULL**: Não são exibidos no gráfico
 
 6. Salve a visualização e visualize-a no painel.
