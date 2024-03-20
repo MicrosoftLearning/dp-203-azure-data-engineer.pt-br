@@ -18,7 +18,9 @@ Este exercício levará aproximadamente **40** minutos para ser concluído.
 
 Neste exercício, você usará um script para provisionar um novo workspace do Azure Databricks e um recurso do Azure Data Factory em sua assinatura do Azure.
 
-1. Em um navegador da Web, entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
+> **Dica**: se você já tiver um workspace do Azure Databricks *Padrão* ou de *Avaliação* <u>e</u> um recurso do Azure Data Factory v2, pule este procedimento.
+
+1. Em um navegador da web, faça logon no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
 2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
@@ -48,15 +50,15 @@ Neste exercício, você usará um script para provisionar um novo workspace do A
 
 ## Importar um notebook
 
-Você pode criar notebooks em seu workspace do Azure Databricks para executar código escrito em uma variedade de linguagens de programação. Neste exercício, você importará um notebook existente que contenha algum código Python.
+Você pode criar notebooks em seu workspace do Azure Databricks para executar código escrito em uma variedade de linguagens de programação. Neste exercício, você importará um notebook já existente que contém um pouco de código Python.
 
-1. No portal do Azure, navegue até o grupo de recursos **dp203-*xxxxxxx*** que foi criado pelo script que você executou.
-2. Selecione o recurso do Serviço Azure Databricks **databricks*xxxxxxx***.
-3. Na página **Visão geral** para **databricks*xxxxxxx***, use o botão **Iniciar Workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador, entrando se solicitado.
-4. Se uma mensagem **Qual é o seu projeto de dados atual?** for exibida, selecione **Concluir** para fechá-la. Em seguida, exiba o portal do workspace do Azure Databricks e observe que a barra lateral no lado esquerdo contém ícones para as várias tarefas que você pode executar.
+1. No portal do Azure, navegue até o grupo de recursos **dp203-*xxxxxxx*** que foi criado pelo script (ou o grupo de recursos que contém seu workspace do Azure Databricks já existente)
+1. Selecione seu recurso do Serviço do Azure Databricks (chamado **databricks*xxxxxxx*** se você usou o script de instalação para criá-lo).
+1. Na página **Visão geral** do seu workspace, use o botão **Iniciar workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador, fazendo o logon se solicitado.
 
-    >**Dica**: Ao usar o portal do Workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-as e siga as instruções fornecidas para concluir as tarefas neste exercício.
+    > **Dica**: ao usar o portal do workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-as e siga as instruções fornecidas para concluir as tarefas neste exercício.
 
+1. Veja o portal do workspace do Azure Databricks e observe que a barra lateral à esquerda contém ícones para as várias tarefas executáveis.
 1. Na barra lateral à esquerda, selecione **Workspace**. Em seguida, selecione a pasta **⌂ Início**.
 1. Na parte superior da página, no menu **⋮** ao lado do seu nome de usuário, selecione **Importar**. Em seguida, na caixa de diálogo **Importar**, selecione **URL** e importe o notebook de `https://github.com/MicrosoftLearning/dp-203-azure-data-engineer/raw/master/Allfiles/labs/27/Process-Data.ipynb`
 1. Revise o conteúdo do notebook, que inclui algumas células de código Python para:
@@ -80,7 +82,7 @@ Para usar o Azure Databricks de um pipeline do Azure Data Factory, você precisa
 ### Criar um serviço vinculado no Azure Data Factory
 
 1. Retorne ao portal do Azure e, no grupo de recursos **dp203-*xxxxxxx***, selecione o recurso **adf*xxxxxxx*** do Azure Data Factory.
-2. Na página **Visão geral**, selecione **Iniciar estúdio** para abrir o Azure Data Factory Studio. Entre se for solicitado.
+2. Na página **Visão geral**, selecione **Iniciar estúdio** para abrir o Azure Data Factory Studio. Entre, se for solicitado.
 3. No Azure Data Factory Studio, use o ícone **>>** para expandir o painel de navegação à esquerda. Em seguida, selecione a página **Gerenciar**.
 4. Na página **Gerenciar**, na guia **Serviços vinculados**, selecione **+ Novo** para adicionar um novo serviço vinculado.
 5. Na janela **Novo serviço vinculado**, selecione a guia **Computação** na parte superior. Em seguida, selecione **Azure Databricks**.
@@ -95,7 +97,7 @@ Para usar o Azure Databricks de um pipeline do Azure Data Factory, você precisa
     - **URL do Workspace do Databricks**: *Definir automaticamente seu URL do workspace do Databricks*
     - **Tipo de autenticação**: Token de acesso
     - **Token de acesso**: *cole seu token de acesso*
-    - **Versão do cluster**: 12.2 LTS (Scala 2.12, Spark 3.2.2)
+    - **Versão do cluster**: 13.3 LTS (Spark 3.4.1, Scala 2.12)
     - **Tipo de nó do cluster**: Standard_DS3_v2
     - **Versão do Python**: 3
     - **Opções de trabalho**: Fixo
@@ -112,7 +114,7 @@ Agora que você criou um serviço vinculado, pode usá-lo em um pipeline para ex
 3. No painel **Propriedades** do novo pipeline, altere seu nome para **Processar Dados com Databricks**. Em seguida, use o botão **Propriedades** (que se parece com **<sub>*</sub>**) na extremidade direita da barra de ferramentas para ocultar o painel de **Propriedades**.
 4. No painel **Atividades**, expanda **Databricks** e arraste outra atividade de **Notebook** para a superfície do designer de pipeline.
 5. Com a nova atividade **Notebook1** selecionada, defina as seguintes propriedades no painel inferior:
-    - **Geral**:
+    - **Geral:**
         - **Nome**: Dados do Processo
     - **Azure Databricks**:
         - **Serviço vinculado do Databricks**: *Selecione o serviço vinculado **AzureDatabricks** que você criou anteriormente*

@@ -44,7 +44,7 @@ Neste exercício, você sincronizará dados de um recurso do Banco de Dados SQL 
 6. Se solicitado, escolha qual assinatura você deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
 7. Quando solicitado, insira uma senha adequada para seu Banco de Dados SQL do Azure.
 
-    > **Observação**: lembre-se dessa senha!
+    > **Observação**: lembre-se dessa senha.
 
 8. Aguarde a conclusão do script – isso normalmente leva cerca de 15 minutos, mas em alguns casos pode levar mais tempo. Enquanto espera, revise o artigo [O que é o Link do Azure Synapse para SQL?](https://docs.microsoft.com/azure/synapse-analytics/synapse-link/sql-synapse-link-overview) na documentação do Azure Synapse Analytics.
 
@@ -151,10 +151,10 @@ Agora você está pronto para configurar o Link do Azure Synapse para SQL em seu
 
     | Tabela de origem | Tabela de destino | Tipo de distribuição | Coluna de distribuição | Tipo de estrutura |
     |--|--|--|--|--|
-    | SalesLT.Customer **→** | \[SalesLT] . \[Customer] | Round Robin | - | Índice columnstore clusterizado |
-    | SalesLT.Product **→** | \[SalesLT] . \[Product] | Round Robin | - | Heap |
-    | SalesLT.SalesOrderDetail **→** | \[SalesLT] . \[SalesOrderDetail] | Round Robin | - | Índice columnstore clusterizado |
-    | SalesLT.SalesOrderHeader **→** | \[SalesLT] . \[SalesOrderHeader] | Round Robin | - | Heap |
+    | SalesLT.Customer **→** | \[SalesLT] . \[Customer] | Round robin | - | Índice columnstore clusterizado |
+    | SalesLT.Product **→** | \[SalesLT] . \[Product] | Round robin | - | Heap |
+    | SalesLT.SalesOrderDetail **→** | \[SalesLT] . \[SalesOrderDetail] | Round robin | - | Índice columnstore clusterizado |
+    | SalesLT.SalesOrderHeader **→** | \[SalesLT] . \[SalesOrderHeader] | Round robin | - | Heap |
 
 4. Na parte superior da página **sql-adventureworkslt-conn** criada, use o botão **▷ Iniciar** para iniciar a sincronização. Quando solicitado, selecione **OK** para publicar e iniciar a conexão de link.
 5. Depois de iniciar a conexão, na página **Monitor**, exiba a guia **Vincular conexões** e selecione a conexão **sql-adventureworkslt-conn**. Use o botão **↻ Atualizar** para atualizar o status periodicamente. Pode levar vários minutos para concluir o processo inicial de cópia de instantâneo e começar a replicar - depois disso, todas as alterações nas tabelas do banco de dados de origem serão automaticamente reproduzidas nas tabelas sincronizadas.

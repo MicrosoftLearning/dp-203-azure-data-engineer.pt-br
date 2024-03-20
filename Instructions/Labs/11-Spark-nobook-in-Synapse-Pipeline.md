@@ -67,29 +67,28 @@ Antes de automatizar um processo de transformação de dados com um bloco de ano
     > **Observação**: é melhor copiar este texto usando ***ctrl + a*** seguido de ***ctrl + c*** e colar em uma ferramenta (como o bloco de notas ) usando ***ctrl + v***; em seguida, usando arquivo, salvar como **Spark Transform.ipynb** com tipo de arquivo definido como ***todos os arquivos***. Você também tem a opção de selecionar o arquivo no GitHub e, em seguida, selecionar as reticências (...) e selecionar **Baixar**, salvando-o em um local que você possa lembrar. 
     ![baixar o arquivo notebook do GitHub](./images/select-download-notebook.png)
 
-10 Em seguida, na página **Desenvolver**, expanda **Notebooks** e clique nas opções + Importar
-
-    ![Spark Notebook import](./image/../images/spark-notebook-import.png)
+10 Em seguida, na página **Desenvolver**, expanda **Notebooks**, clique nas opções ![+ Importar Notebook do Spark](./images/spark-notebook-import.png)
+    
         
-12. Selecione o arquivo que você acabou de baixar e salvar como **Spark Transfrom.ipynb**.
-13. Conecte o notebook ao seu pool do Spark **spark*xxxxxxx***.
-14. Revise as anotações no notebook e execute as células de código.
+1. Selecione o arquivo que você acabou de baixar e salvar como **Spark Transfrom.ipynb**.
+2. Conecte o notebook ao seu pool do Spark **spark*xxxxxxx***.
+3. Revise as anotações no notebook e execute as células de código.
 
     > **Observação**: a primeira célula de código levará alguns minutos para ser executada porque o pool do Spark deve ser iniciado. As células subsequentes serão executadas mais rapidamente.
-9. Revise o código que o notebook contém, observando que:
+4. Revise o código que o notebook contém, observando que:
     - Define uma variável para definir um nome de pasta exclusivo.
     - Carrega os dados da ordem de venda CSV da pasta **/data**.
     - Transforma os dados dividindo o nome do cliente em vários campos.
     - Salva os dados transformados no formato Parquet na pasta com nome exclusivo.
-10. Na barra de ferramentas do notebook, anexe o notebook ao pool do Spark **spark*xxxxxxx*** e use o botão **▷ Executar Tudo** para executar todas as células de código no notebook.
+5. Na barra de ferramentas do notebook, anexe o notebook ao pool do Spark **spark*xxxxxxx*** e use o botão **▷ Executar Tudo** para executar todas as células de código no notebook.
   
     A sessão do Spark pode levar alguns minutos para iniciar antes que as células de código possam ser executadas.
 
-11. Depois que todas as células do notebook forem executadas, observe o nome da pasta na qual os dados transformados foram salvos.
-12. Alterne para a guia de **arquivos** (que ainda deve estar aberta) e visualize a pasta de **arquivos** raiz. Se necessário, no menu **Mais**, selecione **Atualizar** para ver a nova pasta. Em seguida, abra-a para verificar se ela contém arquivos Parquet.
-13. Retorne à pasta de **arquivos** raiz, selecione a pasta com nome exclusivo gerada pelo notebook e, no menu **Novo Script SQL**, selecione **Selecionar as 100 PRIMEIRAS LINHAS**.
-14. No painel **Selecionar as 100 PRIMEIRAS LINHAS**, defina o tipo de arquivo como **formato Parquet** e aplique a mudança.
-15. No novo painel Script SQL que é aberto, use o botão **▷ Executar** para executar o código SQL e verificar se ele retorna os dados da ordem de venda transformados.
+6. Depois que todas as células do notebook forem executadas, observe o nome da pasta na qual os dados transformados foram salvos.
+7. Alterne para a guia de **arquivos** (que ainda deve estar aberta) e visualize a pasta de **arquivos** raiz. Se necessário, no menu **Mais**, selecione **Atualizar** para ver a nova pasta. Em seguida, abra-a para verificar se ela contém arquivos Parquet.
+8. Retorne à pasta de **arquivos** raiz, selecione a pasta com nome exclusivo gerada pelo notebook e, no menu **Novo Script SQL**, selecione **Selecionar as 100 PRIMEIRAS LINHAS**.
+9. No painel **Selecionar as 100 PRIMEIRAS LINHAS**, defina o tipo de arquivo como **formato Parquet** e aplique a mudança.
+10. No novo painel Script SQL que é aberto, use o botão **▷ Executar** para executar o código SQL e verificar se ele retorna os dados da ordem de venda transformados.
 
 ## Executar o notebook em um pipeline
 
