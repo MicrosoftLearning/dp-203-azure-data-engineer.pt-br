@@ -25,7 +25,7 @@ Neste exercício, você precisará de um workspace do Azure Synapse Analytics co
 Você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar esses recursos.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
@@ -93,7 +93,7 @@ Vamos começar ingerindo um fluxo de dados diretamente em uma tabela em um pool 
         - **Contas de armazenamento**: selecione a conta de armazenamento **datalake*xxxxxxx***
         - **Modo de autenticação**: cadeia de conexão
         - **Proteger dados privados na conta de armazenamento**: selecionado
-    - **Marcas:**
+    - **Tags:**
         - *Nenhuma*
 3. Aguarde a conclusão da implantação e acesse o recurso de trabalho do Stream Analytics implantado.
 
@@ -181,7 +181,7 @@ Até agora, você viu como usar um trabalho do Stream Analytics para ingerir men
         - **Contas de armazenamento**: selecione a conta de armazenamento **datalake*xxxxxxx***
         - **Modo de autenticação**: cadeia de conexão
         - **Proteger dados privados na conta de armazenamento**: selecionado
-    - **Marcas:**
+    - **Tags:**
         - *Nenhuma*
 
 2. Aguarde a conclusão da implantação e acesse o recurso de trabalho do Stream Analytics implantado.

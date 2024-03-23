@@ -16,16 +16,18 @@ Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
 É necessário ter uma [assinatura do Azure](https://azure.microsoft.com/free) com acesso de nível administrativo.
 
-## Provisione um workspace do Azure Databricks
+## Provisionar um workspace do Azure Databricks
 
 Neste exercício, você usará um script para provisionar um novo workspace do Azure Databricks.
 
-1. Em um navegador da Web, entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
+> **Dica**: se você já tiver um workspace do Azure Databricks *Padrão* ou de *Avaliação*, pule este procedimento e use o seu workspace já existente.
+
+1. Em um navegador da web, faça logon no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
 2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash* , use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
+    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -51,35 +53,38 @@ Neste exercício, você usará um script para provisionar um novo workspace do A
 
 O Azure Databricks é uma plataforma de processamento distribuído que usa *clusters* do Apache Spark para processar dados em paralelo em vários nós. Cada cluster consiste em um nó de driver para coordenar o trabalho e nós de trabalho para executar tarefas de processamento.
 
-> **Observação**: neste exercício, você criará um cluster de *nó único* para minimizar os recursos de computação usados no ambiente de laboratório (no qual os recursos podem ser restritos). Em um ambiente de produção, você normalmente criaria um cluster com vários nós de trabalho.
+Neste exercício, você criará um cluster de *nó único* para minimizar os recursos de computação usados no ambiente de laboratório (no qual os recursos podem ser restritos). Em um ambiente de produção, você normalmente criaria um cluster com vários nós de trabalho.
 
-1. No portal do Azure, navegue até o grupo de recursos **dp203-*xxxxxxx*** que foi criado pelo script que você executou.
-2. Selecione o recurso do Serviço Azure Databricks **databricks*xxxxxxx***.
-3. Na página **Visão Geral** de **databricks*xxxxxxx***, use o botão **Iniciar Workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador; entrando se solicitado.
-4. Se uma mensagem **Qual é o seu projeto de dados atual?** for exibida, selecione **Concluir** para fechá-la. Em seguida, exiba o portal do workspace do Azure Databricks e observe que a barra lateral no lado esquerdo contém ícones para as várias tarefas que você pode executar.
+> **Dica**: se você já tiver um cluster com uma versão de runtime 13.3 LTS em seu workspace do Azure Databricks, use-o para concluir este exercício e pule este procedimento.
 
-    >**Dica**: Ao usar o portal do Workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-os e siga as instruções fornecidas para concluir as tarefas neste exercício.
+1. No portal do Azure, navegue até o grupo de recursos **dp203-*xxxxxxx*** que foi criado pelo script (ou o grupo de recursos que contém seu workspace do Azure Databricks já existente)
+1. Selecione seu recurso do Serviço do Azure Databricks (chamado **databricks*xxxxxxx*** se você usou o script de instalação para criá-lo).
+1. Na página **Visão geral** do seu workspace, use o botão **Iniciar workspace** para abrir seu workspace do Azure Databricks em uma nova guia do navegador, fazendo o logon se solicitado.
 
-1. Selecione a tarefa **(+) Nova** e, em seguida, selecione **Cluster**.
-1. Na página **Novo Cluster**, crie um novo cluster com as seguintes configurações:
+    > **Dica**: ao usar o portal do workspace do Databricks, várias dicas e notificações podem ser exibidas. Dispense-as e siga as instruções fornecidas para concluir as tarefas neste exercício.
+
+1. Veja o portal do workspace do Azure Databricks e observe que a barra lateral no lado esquerdo contém links para os vários tipos de tarefas executáveis.
+
+1. Na barra lateral, selecione o link **(+) Novo** e depois, **Cluster**.
+1. Na página **Novo cluster**, crie um novo cluster com as seguintes configurações:
     - **Nome do cluster**: cluster *Nome do Usuário* (o nome do cluster padrão)
-    - **Modo do cluster**: Nó Único
+    - **Modo de cluster**: Nó Único
     - **Modo de acesso**: usuário único (*com sua conta de usuário selecionada*)
-    - **Versão de Tempo de Execução do Databricks**: 12.2 LTS (Scala 2.12, Spark 3.2.2)
-    - **Usar Aceleração do Photon**: selecionado
+    - **Versão do runtime do Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12)
+    - **Usar aceleração de Photon**: selecionado
     - **Tipo de nó**: Standard_DS3_v2
     - **Terminar após***30***minutos de inatividade**
 
-7. Aguarde o cluster ser criado. Isso pode levar alguns minutos.
+1. Aguarde a criação do cluster. Isso pode levar alguns minutos.
 
-> **Observação**: se o cluster não for iniciado, sua assinatura pode ter cota insuficiente na região onde seu workspace do Azure Databricks está provisionado. Consulte [Limite de núcleo da CPU impede a criação do cluster](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit) para obter os detalhes. Se isso acontecer, tente excluir seu workspace e criar um novo em uma região diferente. Você pode especificar uma região como um parâmetro para o script de instalação da seguinte maneira: `./setup.ps1 eastus`
+> **Observação**: se o cluster não for iniciado, sua assinatura pode ter cota insuficiente na região onde seu workspace do Azure Databricks está provisionado. Consulte [Limite de núcleo da CPU impede a criação do cluster](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit) para obter detalhes. Se isso acontecer, você pode tentar excluir seu workspace e criar um novo workspace em uma região diferente. Você pode especificar uma região como um parâmetro para o script de instalação da seguinte maneira: `./setup.ps1 eastus`
 
 ## Usar o Spark para analisar um arquivo de dados
 
-Como em muitos ambientes do Spark, o Databricks oferece suporte ao uso de notebooks para combinar anotações e células de código interativas que você pode usar para explorar dados.
+Como em muitos ambientes do Spark, o Databricks oferece suporte ao uso de notebooks para combinar anotações e células de código interativo que você pode usar para explorar dados.
 
-1. Na barra lateral, use a tarefa **(+) Novo** para criar um **Notebook**.
-1. Altere o nome padrão do notebook (**Notebook sem título *[data]***) para **Explorar produtos** e, na lista suspensa **Conectar**, selecione seu cluster (que pode levar cerca de um minuto para iniciar).
+1. Na barra lateral, use o link **(+) Novo** para criar um **Notebook**.
+1. Altere o nome padrão do notebook (**Notebook sem título *[date]***) para **Explorar produtos** e, na lista suspensa **Conectar**, selecione seu cluster se ainda não estiver selecionado. Se o cluster não executar, é porque ele pode levar cerca de um minuto para iniciar.
 1. Baixe o arquivo [**products.csv**](https://raw.githubusercontent.com/MicrosoftLearning/dp-203-azure-data-engineer/master/Allfiles/labs/23/adventureworks/products.csv) para o computador local, salvando-o como **products.csv**. Em seguida, no notebook **Explorar produtos**, no menu **Arquivo**, selecione **Carregar dados para DBFS**.
 1. Na caixa de diálogo **Carregar Dados**, observe o **Diretório de Destino DBFS** para onde o arquivo será carregado. Em seguida, selecione a área **Arquivos** e carregue o arquivo **products.csv** que você baixou para o seu computador. Quando o arquivo tiver sido carregado, selecione **Avançar**
 1. No painel **Acessar arquivos de notebooks**, selecione o código PySpark de exemplo e copie-o para a área de transferência. Você o usará para carregar os dados do arquivo em um DataFrame. Em seguida, selecione **Concluído**.
@@ -135,8 +140,8 @@ Embora muitas análises de dados se sintam confortáveis em usar linguagens como
     WHERE Category = 'Touring Bikes';
     ```
 
-4. Execute a nova célula, que contém código SQL para retornar o nome e o preço dos produtos na categoria *Bicicletas de Turismo*.
-5. Na guia à esquerda, selecione a tarefa **Catálogo** e verifique se a tabela de **produtos** foi criada no esquema de banco de dados padrão (que se chama **padrão**). É possível usar o código do Spark para criar esquemas de banco de dados personalizados e um esquema de tabelas relacionais que os analistas de dados podem usar para explorar dados e gerar relatórios analíticos.
+4. Execute a nova célula, que contém código SQL para retornar o nome e o preço dos produtos na categoria *Bicicletas de passeio*.
+5. Na barra lateral, selecione o link **Catálogo** e verifique que a tabela de **produtos** foi criada no esquema de banco de dados padrão (apropriadamente chamado de **padrão**). É possível usar o código do Spark para criar esquemas de banco de dados personalizados e um esquema de tabelas relacionais que os analistas de dados podem usar para explorar dados e gerar relatórios analíticos.
 
 ## Excluir Recursos do Azure Databricks
 
