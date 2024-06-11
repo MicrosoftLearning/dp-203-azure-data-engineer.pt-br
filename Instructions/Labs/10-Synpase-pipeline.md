@@ -21,7 +21,7 @@ Você precisará de um workspace do Azure Synapse Analytics com acesso ao armaze
 Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
@@ -127,6 +127,7 @@ Para carregar os dados no arquivo de texto na tabela do banco de dados, você im
             - **Nome**: Data_Warehouse
             - **Descrição**: Pool de SQL dedicado
             - **Conectar por meio de runtime de integração**: AutoResolveIntegrationRuntime
+            - **Versão**: Herdada
             - **Método de seleção de conta**: Da assinatura Azure
             - **Assinatura do Azure**: selecione sua assinatura do Azure
             - **Nome do servidor**: synapse*xxxxxxx* (workspace do Synapse)
@@ -241,4 +242,4 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
