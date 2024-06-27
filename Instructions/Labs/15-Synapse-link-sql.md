@@ -117,6 +117,7 @@ Agora você está pronto para configurar o Link do Azure Synapse para SQL em seu
         - **Nome**: SqlAdventureWorksLT
         - **Descrição**: Conexão com o banco de dados AdventureWorksLT
         - **Conectar por meio de runtime de integração**: AutoResolveIntegrationRuntime
+        - **Versão**: Herdada
         - **Cadeia de Conexão**: Selecionado
         - **Da assinatura do Azure**: Selecionado
         - **Assinatura do Azure**: *Selecione sua assinatura do Azure*
