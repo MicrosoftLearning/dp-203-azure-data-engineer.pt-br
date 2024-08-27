@@ -1,14 +1,14 @@
 ---
 lab:
-  title: Analisar dados em um data lake com o Spark
-  module: 'Model, query, and explore data in Azure Synapse'
+  title: Consultar arquivos usando um pool de SQL sem servidor
+  ilt-use: Lab
 ---
 
-# Analisar dados em um data lake com o Spark
+# Consultar arquivos usando um pool de SQL sem servidor
 
-O Apache Spark é um mecanismo de código aberto para processamento de dados distribuído e é amplamente usado para explorar, processar e analisar grandes volumes de dados no data lake storage. O Spark está disponível como uma opção de processamento em vários produtos de plataforma de dados, incluindo o Azure HDInsight, o Azure Databricks, o Azure Synapse Analytics e o Microsoft o Azure Cloud. Um dos benefícios do Spark é o suporte a uma ampla variedade de linguagens de programação, incluindo Java, Scala, Python e SQL, tornando o Spark uma solução muito flexível para cargas de trabalho de processamento de dados, incluindo limpeza e processamento de dados, análise estatística e machine learning, análise e visualização de dados.
+SQL é provavelmente a linguagem mais usada para trabalhar com dados no mundo. A maioria dos analistas de dados é proficiente no uso de consultas SQL para recuperar, filtrar e agregar dados – mais comumente em bancos de dados relacionais. À medida que as organizações aproveitam cada vez mais o armazenamento escalonável de arquivos para criar data lakes, o SQL geralmente ainda é a opção preferida para consultar os dados. O Azure Synapse Analytics fornece pools SQL sem servidor que permitem separar o mecanismo de consulta SQL do armazenamento de dados e executar consultas em arquivos de dados em formatos de arquivo comuns, como texto delimitado e Parquet.
 
-Este laboratório levará aproximadamente **45** minutos para ser concluído.
+Este laboratório levará aproximadamente **40** minutos para ser concluído.
 
 ## Antes de começar
 
@@ -16,9 +16,9 @@ Este laboratório levará aproximadamente **45** minutos para ser concluído.
 
 ## Provisionar um workspace do Azure Synapse Analytics
 
-Você precisará de um workspace do Azure Synapse Analytics com acesso ao armazenamento do Data Lake e um pool do Apache Spark que possa usar para consultar e processar arquivos no Data Lake.
+Você precisará de um espaço de trabalho do Azure Synapse Analytics com acesso ao armazenamento de data lake. Você pode usar o pool do SQL interno sem servidor para consultar arquivos no data lake.
 
-Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
+Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um espaço de trabalho do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
 2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
@@ -29,14 +29,14 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
-4. No painel do PowerShell, insira os seguintes comandos para clonar esse repositório:
+4. No painel do PowerShell, digite o seguinte comando para clonar este repositório:
 
     ```
     rm -r dp203 -f
-    git clone https://github.com/MicrosoftLearning/DP-203-Azure-Data-Engineer dp203
+    git clone https://github.com/MicrosoftLearning/dp-203-azure-data-engineer dp203
     ```
 
-5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar para a pasta deste laboratório e execute o script **setup.ps1** que ele contém:
+5. Depois que o repositório tiver sido clonado, digite os seguintes comandos para alterar a pasta para a neste laboratório e executar o **setup.ps1** contido nela:
 
     ```
     cd dp203/Allfiles/labs/02
@@ -48,7 +48,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
     > **Observação**: Memorize a senha.
 
-8. Aguarde a conclusão do script – isso normalmente leva cerca de 10 minutos, mas em alguns casos pode demorar mais. Enquanto espera, revise o artigo [Apache Spark no Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/spark/apache-spark-overview) na documentação do Azure Synapse Analytics.
+8. Aguarde a conclusão do script – isso normalmente leva cerca de 10 minutos, mas em alguns casos pode demorar mais. Enquanto espera, revise o artigo [Pool de SQL sem servidor no Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/sql/on-demand-workspace-overview) na documentação do Azure Synapse Analytics.
 
 ## Consultar dados em arquivos
 
@@ -56,368 +56,326 @@ O script provisiona um espaço de trabalho do Azure Synapse Analytics e uma cont
 
 ### Exibir arquivos no data lake
 
-1. Depois que o script for concluído, no portal do Azure, vá para o grupo de recursos **dp500-*xxxxxxx*** que ele criou e selecione seu workspace Sinapse.
-2. Na página **Visão geral** do seu workspace Synapse, no cartão **Abrir Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
-3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, o que revela as diferentes páginas do Synapse Studio usadas para gerenciar recursos e executar tarefas de análise de dados.
-4. Na página **Gerenciar**, selecione a guia **Pools do Apache Spark** e observe que um pool do Spark com um nome semelhante ao **spark*xxxxxxx*** foi provisionado no workspace. Posteriormente, você usará esse pool do Spark para carregar e analisar dados de arquivos no armazenamento do data lake para o workspace.
-5. Na página **Dados**, exiba a guia **Vinculado** e verifique se seu workspace inclui um link para sua conta de armazenamento do Azure Data Lake Storage Gen2, que deve ter um nome semelhante à **sinapse*xxxxxxx* (Principal – datalake*xxxxxxx*)**.
-6. Expanda sua conta de armazenamento e verifique se ela contém um contêiner do sistema de arquivos chamado **arquivos**.
-7. Selecione o contêiner de **arquivos** e observe que ele contém pastas chamadas **vendas** e **sinapse**. A pasta **sinapse** é usada pelo Azure Synapse e a pasta **vendas** contém os arquivos de dados que você vai consultar.
-8. Abra a pasta de **vendas** e a pasta **pedidos** contida nela e observe que a pasta **pedidos** contém arquivos de .csv para três anos de dados de vendas.
-9. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos não contêm uma linha de cabeçalho, portanto, você pode desmarcar a opção para exibir cabeçalhos de coluna.
+1. Depois que o script for concluído, no portal do Azure, vá para o Azure Storage **dp203-*xxxxxxx*** que ele criou e selecione seu espaço de trabalho Synapse.
+2. Na página **Visão geral** do seu workspace do Synapse, no cartão **Abrir o Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
+3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu – o que revela as diferentes páginas do Synapse Studio usadas para gerenciar recursos e executar tarefas de análise de dados.
+4. Na página **Dados**, exiba a guia **Vinculado** e verifique se seu workspace inclui um link para sua conta de armazenamento do Azure Data Lake Storage Gen2, que deve ter um nome semelhante à **synapse*xxxxxxx* (Primary - datalake*xxxxxxx*)**.
+5. Expanda sua conta de armazenamento e verifique se ela contém um contêiner do sistema de arquivos chamado **arquivos**.
+6. Selecione o contêiner de **arquivos** e observe que ele contém uma pasta chamada **vendas**. Esta pasta contém os arquivos de dados que você vai consultar.
+7. Abra a pasta de **vendas** e a pasta **csv** que ela contém e observe que essa pasta contém arquivos .csv para três anos de dados de vendas.
+8. Clique com o botão direito do mouse em qualquer um dos arquivos e selecione **Visualizar** para ver os dados que ele contém. Observe que os arquivos não contêm uma linha de cabeçalho, portanto, você pode desmarcar a opção para exibir cabeçalhos de coluna.
+9. Feche a versão prévia e use o botão **&#8593;** para navegar de volta para a pasta **vendas**.
+10. Na pasta **vendas**, abra a pasta **json** e observe que ela contém alguns exemplos de pedidos de vendas em arquivos .json. Visualize qualquer um desses arquivos para ver o formato JSON usado para uma ordem do cliente.
+11. Feche a versão prévia e use o botão **&#8593;** para navegar de volta para a pasta **vendas**.
+12. Na pasta **vendas**, abra a pasta **parquet** e observe que ela contém uma subpasta para cada ano (2019-2021), em cada uma das quais um arquivo denominado **orders.snappy.parquet** contém os dados do pedido daquele ano. 
+13. Retorne à pasta **vendas** para ver as pastas **csv****, json** e **parquet**.
 
-### Use o Spark para explorar dados
+### Usar o SQL para consultar arquivos CSV
 
-1. Selecione qualquer um dos arquivos na pasta **pedidos** e, na lista **Novo bloco de anotações** na barra de ferramentas, selecione **Carregar para DataFrame**. Um dataframe é uma estrutura no Spark que representa um conjunto de dados tabular.
-2. Na nova guia **Bloco de Anotações 1** que é aberta, na lista **Anexar a**, selecione seu pool do Spark (**spark*xxxxxxx***). Em seguida, use o botão **▷ Executar tudo** para executar todas as células do notebook (atualmente há apenas uma!).
+1. Selecione a pasta **csv** e, na lista **Novo script SQL** na barra de ferramentas, selecione **Selecionar as 100 PRIMEIRAS LINHAS**.
+2. Na lista **Tipo de arquivo**, selecione **Formato** de texto e aplique as configurações para abrir um novo script SQL que consulta os dados na pasta.
+3. No painel **Propriedades** do **Script SQL 1** criado, altere o nome para **Consulta CSV de vendas** e altere as configurações de resultado para mostrar **Todas as linhas**. Em seguida, na barra de ferramentas, selecione **Publicar** para salvar o script e use o botão **Propriedades** (que é semelhante a **&#128463;.**) na extremidade direita da barra de ferramentas para ocultar o painel **Propriedades**.
+4. Examine o código de SQL que foi gerado e deve ser semelhante a este:
 
-    Como esta é a primeira vez que você executa qualquer código Spark nesta sessão, o pool do Spark precisa ser iniciado. Isso significa que a primeira execução na sessão pode levar alguns minutos. As execuções seguintes serão mais rápidas.
-
-3. Enquanto aguarda a inicialização da sessão do Spark, revise o código gerado; que se parece com isto:
-
-    ```Python
-    %%pyspark
-    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/sales/orders/2019.csv', format='csv'
-    ## If header exists uncomment line below
-    ##, header=True
-    )
-    display(df.limit(10))
+    ```SQL
+    -- This is auto-generated code
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/csv/',
+            FORMAT = 'CSV',
+            PARSER_VERSION='2.0'
+        ) AS [result]
     ```
 
-4. Quando o código terminar de ser executado, revise a saída abaixo da célula no bloco de anotações. Ele mostra as primeiras dez linhas no arquivo selecionado, com nomes de coluna automáticos no formato **_c0**, _c1 **, ****_c2** e assim por diante.
-5. Modifique o código para que a função **spark.read.load** leia dados de <u>todos</u> os arquivos CSV na pasta e a função de **exibição** mostre as primeiras 100 linhas. Seu código deve ter esta aparência (com *datalakexxxxxxx* correspondente ao nome do seu armazenamento de data lake):
+    Esse código usa o OPENROWSET para ler dados dos arquivos CSV na pasta de vendas e recupera as primeiras 100 linhas de dados.
 
-    ```Python
-    %%pyspark
-    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/sales/orders/*.csv', format='csv'
-    )
-    display(df.limit(100))
+5. Na lista **Conectar-se a**, verifique se **Interno** está selecionado — isso representa o Pool de SQL interno que foi criado com o seu workspace.
+6. Na barra de ferramentas, use o botão **&#9655; Executar** para executar o código SQL e examine os resultados, que devem ser semelhantes a este:
+
+    | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 |
+    | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+    | SO45347 | 1 | 01/01/2020 | Clarence Raji | clarence35@adventure-works.com |Road-650 Black, 52 | 1 | 699.0982 | 55.9279 |
+    | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+7. Observe que os resultados consistem em colunas chamadas C1, C2 e assim por diante. Neste exemplo, os arquivos CSV não incluem os cabeçalhos de coluna. Embora seja possível trabalhar com os dados usando os nomes de coluna genéricos que foram atribuídos ou por posição ordinal, será mais fácil entender os dados se você definir um esquema tabular. Para fazer isso, adicione uma cláusula WITH à função OPENROWSET, conforme mostrado aqui (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) e execute novamente a consulta:
+
+    ```SQL
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/csv/',
+            FORMAT = 'CSV',
+            PARSER_VERSION='2.0'
+        )
+        WITH (
+            SalesOrderNumber VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,
+            SalesOrderLineNumber INT,
+            OrderDate DATE,
+            CustomerName VARCHAR(25) COLLATE Latin1_General_100_BIN2_UTF8,
+            EmailAddress VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,
+            Item VARCHAR(30) COLLATE Latin1_General_100_BIN2_UTF8,
+            Quantity INT,
+            UnitPrice DECIMAL(18,2),
+            TaxAmount DECIMAL (18,2)
+        ) AS [result]
     ```
 
-6. Use o botão **&#9655;** à esquerda da célula de código para executar apenas essa célula e revisar os resultados.
+    Agora, os resultados terão a seguinte aparência:
 
-    O dataframe agora inclui dados de todos os arquivos, mas os nomes das colunas não são úteis. O Spark usa uma abordagem de “esquema em leitura” para tentar determinar os tipos de dados apropriados para as colunas com base nos dados que elas contêm e, se uma linha de cabeçalho estiver presente em um arquivo de texto, ela poderá ser usada para identificar os nomes das colunas (especificando um parâmetro **header=True** na **função **load). Como alternativa, você pode definir um esquema explícito para o dataframe.
+    | SalesOrderNumber | SalesOrderLineNumber | OrderDate | CustomerName | EmailAddress | Item | Quantidade | UnitPrice | TaxAmount |
+    | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+    | SO45347 | 1 | 01/01/2020 | Clarence Raji | clarence35@adventure-works.com |Road-650 Black, 52 | 1 | 699,10 | 55,93 |
+    | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-7. Modifique o código da seguinte forma (substituindo *datalakexxxxxxx*), para definir um esquema explícito para o dataframe que inclui os nomes de coluna e tipos de dados. Execute novamente o código na célula.
+8. Publique as alterações no script e feche o painel de script.
 
-    ```Python
-    %%pyspark
-    from pyspark.sql.types import *
-    from pyspark.sql.functions import *
+### Usar o SQL para consultar arquivos parquet
 
-    orderSchema = StructType([
-        StructField("SalesOrderNumber", StringType()),
-        StructField("SalesOrderLineNumber", IntegerType()),
-        StructField("OrderDate", DateType()),
-        StructField("CustomerName", StringType()),
-        StructField("Email", StringType()),
-        StructField("Item", StringType()),
-        StructField("Quantity", IntegerType()),
-        StructField("UnitPrice", FloatType()),
-        StructField("Tax", FloatType())
-        ])
+Embora o CSV seja um formato fácil de usar, é comum em cenários de processamento de big data usar formatos de arquivo otimizados para compactação, indexação e particionamento. Um dos formatos mais comuns é o *parquet*.
 
-    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/sales/orders/*.csv', format='csv', schema=orderSchema)
-    display(df.limit(100))
+1. Na guia **arquivos** que contém o sistema de arquivos para seu data lake, retorne à pasta **vendas** para que você possa ver as pastas **csv**, **json** e **parquet**.
+2. Selecione a pasta **parquet** e, na lista **Novo script SQL** na barra de ferramentas, selecione **Selecionar 100 linhas SUPERIORES**.
+3. **Na lista Tipo de arquivo**, selecione **Formato Parquet** e aplique as configurações para abrir um novo script SQL que consulta os dados na pasta. O script deve ser semelhante a este:
+
+    ```SQL
+    -- This is auto-generated code
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/parquet/**',
+            FORMAT = 'PARQUET'
+        ) AS [result]
     ```
 
-8. Nos resultados, use botão **+ Código** para adicionar uma nova célula de código ao notebook. Em seguida, na nova célula, adicione o seguinte código para exibir o esquema do dataframe:
-
-    ```Python
-    df.printSchema()
-    ```
-
-9. Execute a nova célula e verifique se o esquema de dataframe corresponde ao **orderSchema** que você definiu. A função **printSchema** pode ser útil ao usar um dataframe com um esquema inferido automaticamente.
-
-## Análise de dados em um dataframe
-
-O objeto **de dataframe** no Spark é semelhante a um dataframe do Pandas em Python e inclui uma ampla variedade de funções que você pode usar para Manipular filtrar, agrupar e processar os dados que ele contém.
-
-### Filtrar um dataframe
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    customers = df['CustomerName', 'Email']
-    print(customers.count())
-    print(customers.distinct().count())
-    display(customers.distinct())
-    ```
-
-2. Execute a nova célula de código e analise os resultados. Observe os seguintes detalhes:
-    - Quando você executa uma operação em um dataframe, o resultado é um novo dataframe (nesse caso, um dataframe **customers** é criado pela seleção de um subconjunto específico de colunas do dataframe **df**)
-    - Os dataframes fornecem funções como **count** e **distinct** que podem ser usadas para resumir e filtrar os dados que eles contêm.
-    - A sintaxe `dataframe['Field1', 'Field2', ...]` é uma forma abreviada de definir um subconjunto de colunas. Você também pode usar o método **select**, para que a primeira linha do código acima possa ser escrita como `customers = df.select("CustomerName", "Email")`
-
-3. Modifique o código da seguinte maneira:
-
-    ```Python
-    customers = df.select("CustomerName", "Email").where(df['Item']=='Road-250 Red, 52')
-    print(customers.count())
-    print(customers.distinct().count())
-    display(customers.distinct())
-    ```
-
-4. Execute o código modificado para visualizar os clientes que compraram o produto *Road-250 Red, 52*. Observe que você pode "encadear" várias funções para que a saída de uma função se torne a entrada da próxima. Nesse caso, o dataframe criado pelo método **select** é o dataframe de origem do método **where** usado para aplicar os critérios de filtragem.
-
-### Agregar e agrupar dados em um dataframe
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    productSales = df.select("Item", "Quantity").groupBy("Item").sum()
-    display(productSales)
-    ```
-
-2. Execute a célula de código que você adicionou e observe que os resultados mostram a soma das quantidades de pedidos agrupadas por produto. O método **groupBy** agrupa as linhas por *Item*, e a função de agregação de **soma** seguinte é aplicada a todas as colunas numéricas restantes (nesse caso, *Quantidade*)
-
-3. Adicione outra nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    yearlySales = df.select(year("OrderDate").alias("Year")).groupBy("Year").count().orderBy("Year")
-    display(yearlySales)
-    ```
-
-4. Execute a célula de código que você adicionou e observe que os resultados mostram o número de pedidos de vendas por ano. Observe que o método **select** inclui uma função **year** do  SQL para extrair o componente de ano do campo *OrderDate* e, em seguida, um método de **alias** é usado para atribuir um nome de coluna ao valor de ano extraído. Em seguida, os dados são agrupados pela coluna *Year* derivada, e a contagem de linhas em cada grupo é calculada antes de finalmente o método **orderBy** ser usado para classificar o dataframe resultante.
-
-## Consultar dados usando Spark SQL
-
-Como você viu, os métodos nativos do objeto de dataframe permitem que você consulte e analise os dados com bastante eficiência. No entanto, muitos analistas de dados se sentem mais à vontade em trabalhar com a sintaxe SQL. O Spark SQL é uma API de linguagem SQL no Spark que você pode usar para executar instruções SQL ou até mesmo persistir dados em tabelas relacionais.
-
-### Usar o Spark SQL no código PySpark
-
-A linguagem padrão nos blocos de anotações do Azure Synapse Studio é PySpark, que é um tempo de execução Python baseado no Spark. Nesse tempo de execução, você pode usar a biblioteca **spark.sql** para incorporar a sintaxe do Spark SQL em seu código Python e trabalhar com construções SQL, como tabelas e exibições.
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    df.createOrReplaceTempView("salesorders")
-
-    spark_df = spark.sql("SELECT * FROM salesorders")
-    display(spark_df)
-    ```
-
-2. Execute a célula e analise os resultados. Observe que:
-    - O código mantém os dados no **dataframe df** como uma exibição temporária chamada **salesorders**. O Spark SQL oferece suporte ao uso de exibições temporárias ou tabelas persistentes como fontes para consultas SQL.
-    - O método **spark.sql** é usado para executar uma consulta SQL no modo de exibição **salesorders**.
-    - Os resultados da consulta estão no formato de um DataFrame do Pandas.
-
-### Executar um código SQL em uma célula
-
-Embora seja útil a inserção de instruções SQL em uma célula que contém um código PySpark, os analistas de dados costumam desejar apenas trabalhar diretamente no SQL.
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
+4. Execute o código e observe que ele retorna dados de ordem de venda no mesmo esquema que os arquivos CSV explorados anteriormente. As informações do esquema são incorporadas no arquivo parquet, portanto, os nomes de coluna apropriados são mostrados nos resultados.
+5. Modifique o código da seguinte maneira (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) e execute-o.
 
     ```sql
-    %%sql
     SELECT YEAR(OrderDate) AS OrderYear,
-           SUM((UnitPrice * Quantity) + Tax) AS GrossRevenue
-    FROM salesorders
+           COUNT(*) AS OrderedItems
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/parquet/**',
+            FORMAT = 'PARQUET'
+        ) AS [result]
+    GROUP BY YEAR(OrderDate)
+    ORDER BY OrderYear
+    ```
+
+6. Observe que os resultados incluem contagens de pedido para todos os três anos – o curinga usado no caminho BULK faz com que a consulta retorne dados de todas as subpastas.
+
+    As subpastas refletem *partições* nos dados do parquet, que é uma técnica frequentemente usada para otimizar o desempenho de sistemas que podem processar várias partições de dados em paralelo. Você também pode usar partições para filtrar os dados.
+
+7. Modifique o código da seguinte maneira (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) e execute-o.
+
+    ```sql
+    SELECT YEAR(OrderDate) AS OrderYear,
+           COUNT(*) AS OrderedItems
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/parquet/year=*/',
+            FORMAT = 'PARQUET'
+        ) AS [result]
+    WHERE [result].filepath(1) IN ('2019', '2020')
+    GROUP BY YEAR(OrderDate)
+    ORDER BY OrderYear
+    ```
+
+8. Analise os resultados e observe que eles incluem apenas as contagens de vendas de 2019 e 2020. Essa filtragem é obtida incluindo um curinga para o valor da pasta de partição no caminho BULK *year=\**) e uma cláusula WHERE com base na propriedade *filepath* dos resultados retornados por OPENROWSET (que nesse caso tem o alias *[result]*).
+
+9. Nomeie seu script como **consulta do Parquet de vendas** e publique-o. Em seguida, feche o painel de script.
+
+### Usar o SQL para consultar arquivos JSON
+
+JSON é outro formato de dados popular, por isso, é útil para consultar arquivos .json em um pool SQL sem servidor.
+
+1. Na guia **arquivos** que contém o sistema de arquivos para seu data lake, retorne à pasta **vendas** para que você possa ver as pastas **csv**, **json** e **parquet**.
+2. Selecione a pasta **json** e, na lista **Novo script SQL** na barra de ferramentas, selecione **Selecionar 100 linhas SUPERIORES**.
+3. Na lista **Tipo de arquivo**, selecione **Formato** de texto e aplique as configurações para abrir um novo script SQL que consulta os dados na pasta. O script deve ser semelhante a este:
+
+    ```sql
+    -- This is auto-generated code
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/json/',
+            FORMAT = 'CSV',
+            PARSER_VERSION = '2.0'
+        ) AS [result]
+    ```
+
+    O script foi projetado para consultar dados delimitados por vírgulas (CSV) em vez de JSON, portanto, você precisa fazer algumas modificações antes que ele funcione com êxito.
+
+4. Modifique o script da seguinte maneira (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) para:
+    - Remover o parâmetro de versão do analisador.
+    - Adicionar parâmetros para terminador de campo, campos entre aspas e terminadores de linha com o código de caractere *0x0b*.
+    - Formate os resultados como um único campo contendo a linha de dados JSON como uma cadeia de caracteres NVARCHAR(MAX).
+
+    ```sql
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/json/',
+            FORMAT = 'CSV',
+            FIELDTERMINATOR ='0x0b',
+            FIELDQUOTE = '0x0b',
+            ROWTERMINATOR = '0x0b'
+        ) WITH (Doc NVARCHAR(MAX)) as rows
+    ```
+
+5. Execute o código modificado e observe que os resultados incluem um documento JSON para cada pedido.
+
+6. Modifique a consulta da seguinte maneira (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) para que ela use a função JSON_VALUE para extrair valores de campo individuais dos dados JSON.
+
+    ```sql
+    SELECT JSON_VALUE(Doc, '$.SalesOrderNumber') AS OrderNumber,
+           JSON_VALUE(Doc, '$.CustomerName') AS Customer,
+           Doc
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/json/',
+            FORMAT = 'CSV',
+            FIELDTERMINATOR ='0x0b',
+            FIELDQUOTE = '0x0b',
+            ROWTERMINATOR = '0x0b'
+        ) WITH (Doc NVARCHAR(MAX)) as rows
+    ```
+
+7. Nomeie seu script como **consulta do JSON de vendas** e publique-o. Em seguida, feche o painel de script.
+
+## Acessar dados externos em um banco de dados
+
+Até agora, você usou a função OPENROWSET em uma consulta SELECT para recuperar dados de arquivos em um data lake. As consultas foram executadas no contexto do banco de dados **primário** em seu pool de SQL sem servidor. Essa abordagem é boa para uma exploração inicial dos dados, mas se você planeja criar consultas mais complexas, pode ser mais eficaz usar o recurso *PolyBase* do Synapse SQL para criar objetos em um banco de dados que fazem referência ao local de dados externos.
+
+### Criar uma fonte de dados externos
+
+Ao definir uma fonte de dados externa em um banco de dados, você pode usá-la para fazer referência ao local do data lake onde os arquivos são armazenados.
+
+1. No Synapse Studio, na página **Desenvolver**, no ****+ menu, selecione **script do SQL**.
+2. No novo painel de script, adicione o seguinte código (substituindo *datalakexxxxxxx* pelo nome da sua conta de armazenamento do data lake) para criar um novo banco de dados e adicionar uma fonte de dados externa a ele.
+
+    ```sql
+    CREATE DATABASE Sales
+      COLLATE Latin1_General_100_BIN2_UTF8;
+    GO;
+
+    Use Sales;
+    GO;
+
+    CREATE EXTERNAL DATA SOURCE sales_data WITH (
+        LOCATION = 'https://datalakexxxxxxx.dfs.core.windows.net/files/sales/'
+    );
+    GO;
+    ```
+
+3. Modifique as propriedades do script para alterar seu nome para **Create Sales DB** e publique.
+4. Verifique se o script está conectado ao pool SQL **interno** e ao banco de dados **mestre** e execute-o.
+5. Volte para a página **Dados** e use o botão **↻** no canto superior direito do Synapse Studio para atualizar a página. Em seguida, exiba a guia **Espaço de trabalho** no painel **Dados**, onde uma lista **banco de dados SQL** agora é exibida. Expanda essa lista para verificar se o banco de dados **Vendas** foi criado.
+6. Expanda o banco de dados **Vendas**, sua pasta **Recursos Externos** e a pasta **Fontes de dados externas** para ver a fonte de dados externa **sales_data** que você criou.
+7. No menu **...** para o banco de dados **Vendas**, selecione **Novo script SQL** > **Script vazio**. Em seguida, no novo painel de script, insira e execute a seguinte consulta:
+
+    ```sql
+    SELECT *
+    FROM
+        OPENROWSET(
+            BULK 'csv/*.csv',
+            DATA_SOURCE = 'sales_data',
+            FORMAT = 'CSV',
+            PARSER_VERSION = '2.0'
+        ) AS orders
+    ```
+
+    A consulta usa a fonte de dados externa para se conectar ao data lake, e a função OPENROWSET agora só precisa fazer referência ao caminho relativo para os arquivos .csv.
+
+8. Modifique o código da seguinte forma para consultar os arquivos parquet usando a fonte de dados.
+
+    ```sql
+    SELECT *
+    FROM  
+        OPENROWSET(
+            BULK 'parquet/year=*/*.snappy.parquet',
+            DATA_SOURCE = 'sales_data',
+            FORMAT='PARQUET'
+        ) AS orders
+    WHERE orders.filepath(1) = '2019'
+    ```
+
+### Criar uma tabela externa
+
+A fonte de dados externa facilita o acesso aos arquivos no data lake, mas a maioria dos analistas de dados que usam SQL está acostumada a trabalhar com tabelas em um banco de dados. Felizmente, você também pode definir formatos de arquivo externos e tabelas externas que encapsulam conjuntos de linhas de arquivos em tabelas de banco de dados.
+
+1. Substitua o código SQL pela instrução a seguir para definir um formato de dados externo para arquivos CSV e uma tabela externa que faça referência aos arquivos CSV e execute-o:
+
+    ```sql
+    CREATE EXTERNAL FILE FORMAT CsvFormat
+        WITH (
+            FORMAT_TYPE = DELIMITEDTEXT,
+            FORMAT_OPTIONS(
+            FIELD_TERMINATOR = ',',
+            STRING_DELIMITER = '"'
+            )
+        );
+    GO;
+
+    CREATE EXTERNAL TABLE dbo.orders
+    (
+        SalesOrderNumber VARCHAR(10),
+        SalesOrderLineNumber INT,
+        OrderDate DATE,
+        CustomerName VARCHAR(25),
+        EmailAddress VARCHAR(50),
+        Item VARCHAR(30),
+        Quantity INT,
+        UnitPrice DECIMAL(18,2),
+        TaxAmount DECIMAL (18,2)
+    )
+    WITH
+    (
+        DATA_SOURCE =sales_data,
+        LOCATION = 'csv/*.csv',
+        FILE_FORMAT = CsvFormat
+    );
+    GO
+    ```
+
+2. Atualize e expanda a pasta **Tabelas externas** no painel Dados** e confirme se uma tabela chamada **dbo.orders** foi criada no banco de dados de ****Vendas**.
+3. No menu **...** para a tabela **dbo.orders**, selecione **Novo script SQL** > **Selecione as 100 linhas SUPERIORES**.
+4. Execute o script SELECT que foi gerado e verifique se ele recupera as primeiras 100 linhas de dados da tabela, que por sua vez faz referência aos arquivos no data lake.
+
+    >**Observação:** você deve sempre escolher o método que melhor se adapta às suas necessidades específicas e caso de uso. Para obter informações mais detalhadas, você pode verificar os artigos [Como usar o OPENROWSET usando o pool SQL sem servidor no Azure Synapse Analytics](https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/develop-openrowset) e [Acessar o armazenamento externo usando o pool SQL sem servidor no Azure Synapse Analytics](https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/develop-storage-files-overview?tabs=impersonation).
+
+## Visualizar resultados da consulta
+
+Agora que você explorou várias maneiras de consultar arquivos no data lake usando consultas SQL, você pode analisar os resultados dessas consultas para obter insights sobre os dados. Muitas vezes, os insights são mais fáceis de descobrir visualizando os resultados da consulta em um gráfico; o que você pode fazer facilmente usando a funcionalidade de gráficos integrados no editor de consultas Synapse Studio.
+
+1. Na página **Desenvolver**, crie uma nova consulta SQL vazia.
+2. Verifique se o script está conectado ao Pool de SQL **Interno** e ao banco de dados **Vendas**.
+3. Insira e execute o código SQL a seguir:
+
+    ```sql
+    SELECT YEAR(OrderDate) AS OrderYear,
+           SUM((UnitPrice * Quantity) + TaxAmount) AS GrossRevenue
+    FROM dbo.orders
     GROUP BY YEAR(OrderDate)
     ORDER BY OrderYear;
     ```
 
-2. Execute a célula e analise os resultados. Observe que:
-    - A linha `%%sql` no início da célula (chamada *magic*) indica que o runtime da linguagem Spark SQL deve ser usado para executar o código nessa célula em vez do PySpark.
-    - O código SQL referencia a exibição **salesorders** que você criou antes usando PySpark.
-    - A saída da consulta SQL é exibida automaticamente como o resultado abaixo da célula.
+4. No painel **Resultados**, selecione **Gráfico** e exiba o gráfico criado para você, que deve ser um gráfico de linhas.
+5. Altere a coluna **Categoria** para  **OrderYear**  para que o gráfico de linhas mostre a tendência da receita durante o período de três anos de 2019 a 2021:
 
-> **Observação**: para obter mais informações sobre o Spark SQL e os dataframes, confira a [documentação do Spark SQL](https://spark.apache.org/docs/2.2.0/sql-programming-guide.html).
+    ![Um gráfico de linhas mostrando a receita por ano](./images/yearly-sales-line.png)
 
-## Visualizar os dados com o Spark
+6. Alterne o **Tipo de gráfico** para **Coluna** com o objetivo de ver a receita anual como um gráfico de colunas:
 
-Como o provérbio diz, uma imagem vale mil palavras, e um gráfico geralmente é melhor do que mil linhas de dados. Embora os notebooks do Azure Synapse Analytics incluam uma exibição de gráfico interna para dados exibidos em um dataframe ou em uma consulta Spark SQL, ele não foi projetado para gráficos abrangentes. No entanto, você pode usar bibliotecas de elementos gráficos do Python, como a **matplotlib** e a **seaborn**, para criar gráficos com base em dados em dataframes.
+    ![Um gráfico de coluna mostrando a receita por ano](./images/yearly-sales-column.png)
 
-### Exibir os resultados como um gráfico
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```sql
-    %%sql
-    SELECT * FROM salesorders
-    ```
-
-2. Execute o código e observe que ele retorna os dados da exibição **salesorders** que você já criou.
-3. Na seção de resultados abaixo da célula, altere a opção **Exibir** de **Tabela** para **Gráfico**.
-4. Use o botão **Exibir opções** no canto superior direito do gráfico para exibir o painel de opções do gráfico. Em seguida, defina as opções da seguinte maneira e selecione **Aplicar**:
-    - **Tipo de gráfico**: Gráfico de barras
-    - **Chave**: Item
-    - **Valores**: Quantidade
-    - **Grupo de Séries**: *deixe em branco*
-    - **Agregação**: Soma
-    - **Empilhado**: *Não selecionado*
-
-5. Verifique se o gráfico é parecido com este:
-
-    ![Um gráfico de barras de produtos pela quantidade total de pedidos](./images/notebook-chart.png)
-
-### Introdução à **matplotlib**
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    sqlQuery = "SELECT CAST(YEAR(OrderDate) AS CHAR(4)) AS OrderYear, \
-                    SUM((UnitPrice * Quantity) + Tax) AS GrossRevenue \
-                FROM salesorders \
-                GROUP BY CAST(YEAR(OrderDate) AS CHAR(4)) \
-                ORDER BY OrderYear"
-    df_spark = spark.sql(sqlQuery)
-    df_spark.show()
-    ```
-
-2. Execute o código e observe se ele retorna um dataframe do Spark que contém a receita anual.
-
-    Para visualizar os dados como um gráfico, começaremos usando a biblioteca **matplotlib** do Python. Essa biblioteca é a biblioteca de plotagem principal na qual muitas outras se baseiam e fornece muita flexibilidade na criação de gráficos.
-
-3. Adicione uma nova célula de código ao notebook e adicione o seguinte código a ele:
-
-    ```Python
-    from matplotlib import pyplot as plt
-
-    # matplotlib requires a Pandas dataframe, not a Spark one
-    df_sales = df_spark.toPandas()
-
-    # Create a bar plot of revenue by year
-    plt.bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'])
-
-    # Display the plot
-    plt.show()
-    ```
-
-4. Execute a célula e analise os resultados, que consistem em um gráfico de colunas com a receita bruta total de cada ano. Observe os seguintes recursos do código usado para produzir este gráfico:
-    - A biblioteca **matplotlib** exige um dataframe do *Pandas*, ou seja, você precisa converter o dataframe do *Spark* retornado pela consulta Spark SQL nesse formato.
-    - No núcleo da biblioteca **matplotlib** está o objeto **pyplot**. Essa é a base para a maioria das funcionalidades de plotagem.
-    - As configurações padrão resultam em um gráfico utilizável, mas há um escopo considerável para personalizá-lo
-
-5. Modifique o código para plotar o gráfico da seguinte maneira:
-
-    ```Python
-    # Clear the plot area
-    plt.clf()
-
-    # Create a bar plot of revenue by year
-    plt.bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'], color='orange')
-
-    # Customize the chart
-    plt.title('Revenue by Year')
-    plt.xlabel('Year')
-    plt.ylabel('Revenue')
-    plt.grid(color='#95a5a6', linestyle='--', linewidth=2, axis='y', alpha=0.7)
-    plt.xticks(rotation=45)
-
-    # Show the figure
-    plt.show()
-    ```
-
-6. Execute novamente a célula de código e veja os resultados. O gráfico agora inclui um pouco mais de informações.
-
-    Tecnicamente, um gráfico está contido com uma **Figura**. Nos exemplos anteriores, a figura foi criada implicitamente, mas você pode criá-la de modo explícito.
-
-7. Modifique o código para plotar o gráfico da seguinte maneira:
-
-    ```Python
-    # Clear the plot area
-    plt.clf()
-
-    # Create a Figure
-    fig = plt.figure(figsize=(8,3))
-
-    # Create a bar plot of revenue by year
-    plt.bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'], color='orange')
-
-    # Customize the chart
-    plt.title('Revenue by Year')
-    plt.xlabel('Year')
-    plt.ylabel('Revenue')
-    plt.grid(color='#95a5a6', linestyle='--', linewidth=2, axis='y', alpha=0.7)
-    plt.xticks(rotation=45)
-
-    # Show the figure
-    plt.show()
-    ```
-
-8. Execute novamente a célula de código e veja os resultados. A figura determina a forma e o tamanho do gráfico.
-
-    Uma figura pode conter vários subgráficos, cada um em um *eixo* próprio.
-
-9. Modifique o código para plotar o gráfico da seguinte maneira:
-
-    ```Python
-    # Clear the plot area
-    plt.clf()
-
-    # Create a figure for 2 subplots (1 row, 2 columns)
-    fig, ax = plt.subplots(1, 2, figsize = (10,4))
-
-    # Create a bar plot of revenue by year on the first axis
-    ax[0].bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'], color='orange')
-    ax[0].set_title('Revenue by Year')
-
-    # Create a pie chart of yearly order counts on the second axis
-    yearly_counts = df_sales['OrderYear'].value_counts()
-    ax[1].pie(yearly_counts)
-    ax[1].set_title('Orders per Year')
-    ax[1].legend(yearly_counts.keys().tolist())
-
-    # Add a title to the Figure
-    fig.suptitle('Sales Data')
-
-    # Show the figure
-    plt.show()
-    ```
-
-10. Execute novamente a célula de código e veja os resultados. A figura contém os subgráficos especificados no código.
-
-> **Observação**: para saber mais sobre a plotagem com a matplotlib, confira a [documentação da matplotlib](https://matplotlib.org/).
-
-### Usar a biblioteca **seaborn**
-
-Embora a **matplotlib** permita que você crie gráficos complexos de vários tipos, ele pode exigir um código complexo para obter os melhores resultados. Por esse motivo, ao longo dos anos, muitas bibliotecas foram criadas na base na matplotlib para abstrair a complexidade e aprimorar as funcionalidades. Uma dessas bibliotecas é a **seaborn**.
-
-1. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    import seaborn as sns
-
-    # Clear the plot area
-    plt.clf()
-
-    # Create a bar chart
-    ax = sns.barplot(x="OrderYear", y="GrossRevenue", data=df_sales)
-    plt.show()
-    ```
-
-2. Execute o código e observe que ele exibe um gráfico de barras usando a biblioteca seaborn.
-3. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    # Clear the plot area
-    plt.clf()
-
-    # Set the visual theme for seaborn
-    sns.set_theme(style="whitegrid")
-
-    # Create a bar chart
-    ax = sns.barplot(x="OrderYear", y="GrossRevenue", data=df_sales)
-    plt.show()
-    ```
-
-4. Execute o código e observe que a seaborn permite que você defina um tema de cor consistente para seus gráficos.
-
-5. Adicione uma nova célula de código ao notebook e insira o seguinte código nela:
-
-    ```Python
-    # Clear the plot area
-    plt.clf()
-
-    # Create a bar chart
-    ax = sns.lineplot(x="OrderYear", y="GrossRevenue", data=df_sales)
-    plt.show()
-    ```
-
-6. Execute o código para ver a receita anual como um gráfico de linhas.
-
-> **Observação**: para saber mais sobre como fazer uma plotagem com a seaborn, confira a [documentação da seaborn](https://seaborn.pydata.org/index.html).
+7. Experimente a funcionalidade de gráficos no editor de consultas. Ela oferece alguns recursos básicos de gráficos que você pode usar ao explorar dados interativamente, e você pode salvar gráficos como imagens para incluir em relatórios. No entanto, a funcionalidade é limitada em comparação com as ferramentas de visualização de dados corporativos, como o Microsoft Power BI.
 
 ## Excluir recursos do Azure
 
@@ -425,8 +383,8 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 
 1. Feche a guia do navegador do Synapse Studio e retorne ao portal do Azure.
 2. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
-3. Selecione o grupo de recursos **dp500-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento e o pool do Spark para seu workspace.
+3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse e a conta de armazenamento para seu workspace.
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
-5. Digite o nome do grupo de recursos **dp500-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
+5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
