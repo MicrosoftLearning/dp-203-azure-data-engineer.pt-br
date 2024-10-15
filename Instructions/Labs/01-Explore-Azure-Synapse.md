@@ -433,7 +433,7 @@ Agora que você terminou de explorar Azure Synapse Analytics, exclua os recursos
 
 1. Feche a guia do navegador do Synapse Studio e retorne ao portal do Azure.
 2. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
-3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento, o pool de SQL, o pool do Data Explorer e o pool do Spark para seu workspace.
+3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o espaço de trabalho do Synapse Analytics (não o grupo de recursos gerenciado) e verifique que ele contém o espaço de trabalho do Synapse, a conta de armazenamento, o pool de SQL e o pool do Spark para seu espaço de trabalho.
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
