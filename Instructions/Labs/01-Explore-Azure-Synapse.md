@@ -54,7 +54,7 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
 
 O *Synapse Studio* é um portal baseado na Web no qual você pode gerenciar e trabalhar com os recursos em seu espaço de trabalho do Azure Synapse Analytics.
 
-1. Quando o script de instalação terminar de ser executado, no portal do Azure, vá para o grupo de recursos **dp203-*xxxxxxx*** que ele criou e observe que esse grupo de recursos contém seu workspace Synapse, uma conta de armazenamento para seu data lake, um pool Apache Spark, um pool do Data Explorer e um pool SQL Dedicado.
+1. Quando o script de instalação terminar de ser executado, no portal do Azure, vá para o grupo de recursos **dp203-*xxxxxxx*** que foi criado e observe que esse grupo de recursos contém o espaço de trabalho do Synapse, uma conta de armazenamento do seu data lake, um pool do Apache Spark e um pool SQL dedicado.
 2. Selecione o seu workspace do Synapse e a página de **Visão Geral** dele, no cartão do **Open Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador. O Synapse Studio é uma interface baseada na Web que pode ser usada para trabalhar com o seu workspace do Synapse Analytics.
 3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, isso revela as diferentes páginas no Synapse Studio que você usará para gerenciar recursos e executar tarefas de análise de dados, como mostrado aqui:
 
@@ -433,7 +433,7 @@ Agora que você terminou de explorar Azure Synapse Analytics, exclua os recursos
 
 1. Feche a guia do navegador do Synapse Studio e retorne ao portal do Azure.
 2. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
-3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento, o pool de SQL, o pool do Data Explorer e o pool do Spark para seu workspace.
+3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o espaço de trabalho do Synapse Analytics (não o grupo de recursos gerenciado) e verifique que ele contém o espaço de trabalho do Synapse, a conta de armazenamento, o pool de SQL e o pool do Spark para seu espaço de trabalho.
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 

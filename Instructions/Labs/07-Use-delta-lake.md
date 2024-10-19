@@ -21,15 +21,15 @@ Você precisará de um workspace do Azure Synapse Analytics com acesso ao armaze
 Neste exercício, você usará uma combinação de um script do PowerShell e um modelo ARM para provisionar um workspace do Azure Synapse Analytics.
 
 1. Entre no [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
-2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um novo Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando um armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
+2. Use o botão **[\>_]** à direita da barra de pesquisa na parte superior da página para criar um Cloud Shell no portal do Azure, selecionando um ambiente ***PowerShell*** e criando armazenamento caso solicitado. O Cloud Shell fornece uma interface de linha de comando em um painel na parte inferior do portal do Azure, conforme mostrado aqui:
 
     ![Portal do Azure com um painel do Cloud Shell](./images/cloud-shell.png)
 
-    > **Observação**: se você tiver criado anteriormente um Cloud Shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do Cloud Shell para alterá-lo para ***PowerShell***.
+    > **Observação**: se você tiver criado anteriormente um cloud shell que usa um ambiente *Bash*, use o menu suspenso no canto superior esquerdo do painel do cloud shell para alterá-lo para ***PowerShell***.
 
 3. Observe que você pode redimensionar o Cloud Shell arrastando a barra do separador na parte superior do painel ou usando os ícones **&#8212;** , **&#9723;** e **X** no canto superior direito do painel para minimizar, maximizar e fechar o painel. Para obter mais informações de como usar o Azure Cloud Shell, confira a [documentação do Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
-4. No painel do PowerShell, insira os seguintes comandos para clonar este repositório:
+4. No painel do PowerShell, insira os seguintes comandos para clonar esse repositório:
 
     ```
     rm -r dp-203 -f
@@ -43,10 +43,10 @@ Neste exercício, você usará uma combinação de um script do PowerShell e um 
     ./setup.ps1
     ```
 
-6. Se solicitado, escolha qual assinatura deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
-7. Quando solicitado, insira uma senha adequada que será definida para seu pool do SQL do Azure Synapse.
+6. Se solicitado, escolha qual assinatura você deseja usar (isso só acontecerá se você tiver acesso a várias assinaturas do Azure).
+7. Quando solicitado, insira uma senha adequada a ser definida para seu pool de SQL do Azure Synapse.
 
-    > **Observação**: lembre-se dessa senha!
+    > **Observação**: Memorize a senha.
 
 8. Aguarde a conclusão do script – isso normalmente leva cerca de 10 minutos, mas em alguns casos pode levar mais tempo. Enquanto espera, revise o artigo [O que é Delta Lake](https://docs.microsoft.com/azure/synapse-analytics/spark/apache-spark-what-is-delta-lake) na documentação do Azure Synapse Analytics.
 
@@ -426,4 +426,4 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
 5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.

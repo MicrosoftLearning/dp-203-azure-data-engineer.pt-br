@@ -49,8 +49,24 @@ Neste exercício, você usará o Microsoft Purview para rastrear ativos e linhag
     > **Observação**: lembre-se dessa senha.
 
 8. Aguarde a conclusão do script – isso normalmente leva cerca de 15 minutos, mas em alguns casos pode levar mais tempo. Enquanto você espera, revise o artigo [O que está disponível no portal de governança do Microsoft Purview?](https://docs.microsoft.com/azure/purview/overview) na documentação do Microsoft Purview.
+9. Quando o script for concluído, examine a saída e observe que um sufixo exclusivo no formato *xxxxxxx* foi gerado para seus nomes de recursos - por exemplo, o grupo de recursos que foi criado é denominado **dp203-xxxxxxx****. Anote esse sufixo – você precisará dele mais tarde ao criar recursos adicionais.
 
 > **Dica**: se, depois de executar o script de instalação, você decidir não concluir o laboratório, exclua o grupo de recursos **dp203-*xxxxxxx*** que foi criado em sua assinatura do Azure para evitar custos desnecessários do Azure.
+
+## Explorar o espaço de trabalho do Azure Synapse Analytics
+
+O script criou um espaço de trabalho do Azure Synapse Analytics, que você pode explorar e gerenciar usando a interface baseada na Web do Azure Synapse Studio. O espaço de trabalho inclui um pool de SQL dedicado, que foi pausado para evitar custos desnecessários. Você vai precisar dele em breve, então agora é um bom momento para retomá-lo.
+
+1. No portal do Azure, na página do seu workspace do Synapse Analytics, exiba a guia **Visão Geral**. Em seguida, no bloco **Abrir Synapse Studio**, use o link para abrir o Azure Synapse Studio em uma nova guia do navegador - entrando se solicitado.
+
+    >**Dica**: como alternativa, você pode abrir o Azure Synapse Studio navegando diretamente para https://web.azuresynapse.net em uma nova guia do navegador.
+
+2. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, o que revela as diferentes páginas do Synapse Studio.
+3. Na página **Gerenciar**, na guia **pools de SQL**, selecione a linha do pool de SQL dedicado **sql*xxxxxxx*** e use seu ícone **▷** para iniciá-lo, confirmando que você deseja retomá-lo quando solicitado.
+
+    ![Uma captura de tela da página de pools de SQL no Synapse Studio.](./images/resume-sql-pool.png)
+
+4. A retomada de um pool pode levar alguns minutos. Você pode usar o botão **↻ Atualizar** para verificar seu status periodicamente. O status será exibido como **Online** quando estiver pronto. Enquanto aguarda, continue as etapas abaixo para criar um banco de dados lake e, em seguida, volte para a **página Gerenciar** para confirmar se o pool de SQL dedicado está online.
 
 ## Criar um banco de dados Lake
 
@@ -58,69 +74,56 @@ Os bancos de dados Lake armazenam dados em um data lake no Azure Storage. Você 
 
 Os bancos de dados Lake são acessíveis no pool de SQL sem servidor Synapse SQL e no Apache Spark, permitindo que os usuários separem o armazenamento da computação. Os metadados do banco de dados Lake facilitam que diferentes mecanismos forneçam uma experiência integrada, e usem informações extras (por exemplo, relações) que não tinham suporte no data lake.
 
-1. Para criar um banco de dados Lake, vamos primeiro abrir o synapsexxxxxxx do grupo de recursos apropriado e, em seguida, clique no link ***aberto*** no **Open Synapse Studio**. 
-2. Em seguida, clicaremos na caixa de ferramentas com a chave inglesa, que também é a seção Gerenciar do workspace do Synapse Analytics e verificaremos se nosso pool Dedicado está em execução. A inicialização pode levar alguns minutos.
-3. A partir daqui, vamos clicar no símbolo do banco de dados que se parece com um barril e tem um rótulo de dados.
-4. Uma vez no painel Dados, clique no símbolo + à direita da palavra **Dados** e selecione ***Banco de dados Lake***
-   
-    ![Criação do banco de dados lakedb inicial](./images/lakedb-configure.png)
+1. No Azure Synapse Studio, exiba a página **Dados** e, na guia **Workspace**, expanda o **banco de dados SQL** para ver os bancos de dados em seu workspace. Eles incluirão o banco de dados do pool de SQL dedicado **sql*xxxxxxx*** que você acabou de retomar.
+2. No painel **Dados**, no menu ****+, escolha **Banco de dados lake** para adicionar um novo banco de dados lake ao espaço de trabalho.
 
-> **Observação**: você receberá um prompt dos **Termos de Uso do Modelo de Banco de Dados do Azure Synapse** que você deve ler e entender antes de clicar no botão **OK**.
+    > **Observação**: você receberá um prompt dos **Termos de Uso do Modelo de Banco de Dados do Azure Synapse** que você deve ler e entender antes de clicar no botão **OK**.
 
-5. Você observará no lado direito que há uma janela Propriedades.
-   1. Digite **lakedb** no campo de nome.
-   1. em **Pasta de entrada**, selecione a pasta e navegue até root/files/data e pressione **OK**.
+3. No painel **Propriedades** do novo banco de dados lake (à direita), defina as seguintes propriedades:
+    - **Nome**: lakedb
+    - **Pasta de entrada**: *navegue até **root/files/data***
 
->**Observação**: Você provavelmente verá um erro ao abrir a **pasta de Entrada**, basta clicar duas vezes na pasta raiz e trabalhar seu caminho até os dados antes de clicar em **OK** , se esse for o caso.
+    >**Dica**: você poderá encontrar um erro ao abrir a **Pasta de entrada**, basta clicar duas vezes na pasta raiz e seguir o caminho até os dados antes de clicar em **OK**, se esse for o caso.
 
-   1. À esquerda desta tela, você verá um pilar com o nome do seu **lakedb** com uma **+Tabela** abaixo dele, clique nele e selecione ***Do data lake***
-   1. Em ***Nome da tabela externa***, digite: **Produtos**.
-   1. Em ***Serviço vinculado***, selecione a opção padrão.
-   1. Na ***pasta ou entrada de Arquivo***, clique na pasta do arquivo na extremidade direita e navegue até **raiz > arquivos > dados >** e selecione ***products.csv*** e clique em **OK**. Em seguida, clique em **Continuar**.
+4. No painel **Tabelas** à esquerda, no menu **+ Tabela**, escolha ***Do data lake***. Depois, adicione uma tabela com as seguintes propriedades:
+    - ***Nome da tabela externa***: Produtos
+    - ***Serviço vinculado***: synapse*xxxxxxx*-WorkspaceDefaultStorage(datalake*xxxxxxx*)
+    - ***Arquivo ou pasta de entrada***: files/data/products.csv
 
-6. No painel **Nova tabela externa**, selecione a opção Primeira Linha para ***inferir nomes da coluna***. Em seguida, clique em **criar**.
+5. Clique em **Continuar** e, no painel **Nova tabela externa**, escolha a opção Primeira Linha para ***inferir nomes de colunas*** e clique em **criar**.
 
-![configuração da fonte externa](./images/lakedb-external-table-source.png)
-
-7. Pressione **Publicar** na parte superior da janela de design da consulta.
-8. Em **Dados**, verifique se você está na área do **Workspace** no lado esquerdo e expanda a seção **banco de dados Lake**, expanda **lakedb**, ***passe o mouse sobre*** o lado direto da tabela de **Produtos** e escolha as ***100 primeiras linhas***.
-
-![estrutura de tabela derivada de fonte externa](./images/lakedb-external-table-definition.png)
-
-> **Observação**: Verfique se a opção **Conectar-se a** está listada como **Interno** e deixe o banco de dados **mestre** selecionado ou clique no botão Atualizar à direita e selecione o banco de dados **lakedb**. Como é usada uma convenção de nomenclatura de 3 partes [banco de dados]. [esquema]. [tabela] ambos vão funcionar.
+6. Clique em **Publicar** na parte superior da janela do banco de dados lake para salvar as alterações
+7. No painel **Dados**, expanda a seção **Banco de dados lake**, expanda **lakedb** e, em seguida, no menu **...** da tabela **Produtos**, escolha ***Criar 100 linhas superiores*** >  do **script SQL**
+8. Confirme se **Conectar a** está listado como **Integrado** e atualize a lista **Usar banco de dados** e escolha **lakedb**.
 
 ![primeira consulta externa no banco de dados lake](./images/lakedb-first-external-query.png)
 
-9. Pressione o botão **Executar** para exibir os dados na tabela do banco de dados lake.
+9. Use o botão **Executar** para executar a consulta e exibir os dados na tabela **Produtos**.
 
-## Adicionar Serviço do Microsoft Purview à Conta
+## Adicionar e configurar uma conta de serviço do Microsoft Purview
 
-O Microsoft Purview é um portfólio detalhado de produtos que abrangem governança de dados, proteção de informações, gerenciamento de riscos e soluções de conformidade. Ele ajuda você a governar, proteger e gerenciar todo o seu estado de dados em seus dados locais, em várias nuvens e em software como serviço (SaaS)
+O Microsoft Purview é um portfólio detalhado de produtos que abrangem governança de dados, proteção de informações, gerenciamento de riscos e soluções de conformidade. Ele ajuda você a governar, proteger e gerenciar todo o seu estado de dados em seus dados locais, em várias nuvens e em software como serviço (SaaS).
 
-Para configurá-lo, primeiro retornaremos ao nosso grupo de recursos principal, que será chamado dp203-xxxxxxx com base no número aleatório que lhe foi atribuído. Quando estiver no **grupo de recursos**, clique no botão ***+ Criar*** para adicionar um novo serviço.
+### Provisionar uma conta do Microsoft Purview
 
-1. Selecione o **serviço Microsoft Purview** e clique no botão **Criar**.
-2. Durante o processo de criação, como você iniciou no grupo de recursos apropriado, ele já deve estar selecionado. Em seguida, daremos um nome ao **Purview** usando seu número atribuído aleatoriamente. Em seguida, selecione a melhor região para a sua instância.
+> **Observação**: os recursos do Purview são limitados em um único locatário do Azure. Se o locatário que você está usando já tiver usado a cota de instâncias do Azure Purview, você não conseguirá criar uma nova. Se possível, você pode usar um recurso existente do Microsoft Purview para o restante deste exercício.
 
-   ![Criar Purview](./images/purview-create.png)
+1. Volte para a guia do navegador que contém o portal do Azure e exiba o grupo de recursos **dp203-*xxxxxxx***.
+2. Use o botão **+ Criar** para adicionar um novo recurso do **Microsoft Purview** ao grupo de recursos com as seguintes configurações:
+    - **Assinatura**: *selecione sua assinatura*
+    - **Grupo de recursos**: dp203-*xxxxxxx*
+    - **Nome da conta do Microsoft Purview**: purview*xxxxxxx**(em que *xxxxxxx* é o sufixo exclusivo)*
+    - **Localização**: *escolha qualquer região disponível*
 
-3. Clique no botão **Revisar e Criar** e aguarde a ***Validação*** antes de avançar.
+    > **Observação**: Talvez seja necessário tentar algumas regiões para poder passar na validação com o Purview.
 
-   ![validar Purview](./images/validation-passed.png)
-
-4. Depois que a validação for aprovada, pressione o botão **Criar**.
-
-> **Observação**: Talvez seja necessário tentar algumas regiões para poder passar na validação com o Purview.
-
-## Catalogar ativos de dados do Azure Synapse Analytics no Microsoft Purview
-
-Com o Microsoft Purview, você pode catalogar ativos de dados em todo o seu estado de dados, incluindo fontes de dados em um Workspace do Azure Synapse. O workspace que você acabou de implantar inclui um data lake (em uma conta do Azure Data Lake Storage Gen2), um banco de dados sem servidor e um data warehouse em um pool de SQL dedicado.
+3. Aguarde até que o recurso seja criado, retorne ao grupo de recursos **dp203-*xxxxxxx*** e verifique se ele está listado (talvez seja necessário atualizar a página).
 
 ### Configurar o acesso com base em função para o Microsoft Purview
 
 O Microsoft Purview está configurado para usar uma identidade gerenciada. Para catalogar ativos de dados, essa conta de identidade gerenciada deve ter acesso ao workspace do Azure Synapse Analytics e à conta de armazenamento para seu repositório data lake.
 
-1. No [portal do Azure](https://portal.azure.com), navegue até o grupo de recursos **dp203-*xxxxxxx*** que foi criado pelo script de instalação e exiba os recursos que ele criou. Estão incluídos:
+1. No grupo de recursos **dp203-*xxxxxxx***, revise os recursos que você criou. Estão incluídos:
     - Uma conta de armazenamento com um nome semelhante a **datalake*xxxxxxx***.
     - Uma conta do Microsoft Purview com um nome semelhante a **purview*xxxxxxx***.
     - Um pool de SQL dedicado com um nome semelhante a **sql*xxxxxxx***.
@@ -146,50 +149,42 @@ O Microsoft Purview está configurado para usar uma identidade gerenciada. Para 
 
 Seu workspace do Azure Synapse Analytics inclui bancos de dados em pools de SQL *sem servidor* e *dedicados* , aos quais a identidade gerenciada usada pelo Microsoft Purview requer acesso.
 
-1. No portal do Azure, na página do seu workspace do Synapse Analytics, exiba a guia **Visão Geral**. Em seguida, no bloco **Abrir Synapse Studio**, use o link para abrir o Azure Synapse Studio em uma nova guia do navegador - entrando se solicitado.
-
-    >**Dica**: como alternativa, você pode abrir o Azure Synapse Studio navegando diretamente para https://web.azuresynapse.net em uma nova guia do navegador.
-
-2. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, o que revela as diferentes páginas do Synapse Studio.
-3. Na página **Gerenciar**, na guia **pools de SQL**, selecione a linha do pool de SQL dedicado **sql*xxxxxxx*** e use seu ícone **▷** para iniciá-lo, confirmando que você deseja retomá-lo quando solicitado.
-
-    ![Uma captura de tela da página de pools de SQL no Synapse Studio.](./images/resume-sql-pool.png)
-
-4. Aguarde até que o pool de SQL seja retomado. Isso pode levar alguns minutos. Você pode usar o botão **↻ Atualizar** para verificar seu status periodicamente. O status será exibido como **Online** quando estiver pronto.
-5. No Azure Synapse Studio, exiba a página **Dados** e, na guia **Workspace**, expanda o **banco de dados SQL** para ver os bancos de dados em seu workspace. Devem estar inclusos:
-    - Um banco de dados de pool de SQL sem servidor chamado **lakedb**.
+1. Retorne à guia do navegador que contém o Azure Synapse Studio. Em seguida, exiba a página **Dados** para ver os bancos de dados em seu local de trabalho. Devem estar inclusos:
+    - Um banco de dados lake chamado **lakedb**.
     - Um banco de dados de pool de SQL dedicado chamado **sql*xxxxxxx***.
 
-    ![Uma captura de tela da página Dados no Synapse Studio, listando dois bancos de dados SQL,](./images/sql-databases.png)
-
-6. Selecione o banco de dados **lakedb** e, em seguida, no menu **...**, selecione **Novo script de SQL** > **Esvaziar script** para abrir um novo painel **Script de SQL 1**. Você pode usar o botão **Propriedades** (que se parece com **<sub>*</sub>**) na extremidade direita da barra de ferramentas para ocultar o painel **Propriedades** e ver o painel do script mais facilmente.
+2. Selecione o banco de dados **lakedb** e, em seguida, no menu **...**, selecione **Novo script de SQL** > **Esvaziar script** para abrir um novo painel **Script de SQL 1**. Você pode usar o botão **Propriedades** (que se parece com **<sub>*</sub>**) na extremidade direita da barra de ferramentas para ocultar o painel **Propriedades** e ver o painel do script mais facilmente.
 7. No painel **script de SQL 1**, insira o seguinte código SQL, substituindo todas as instâncias de ***purviewxxxxxxx*** pelo nome da identidade gerenciada para sua conta do Microsoft Purview:
 
     ```sql
-    CREATE LOGIN purviewxxxxxxx FROM EXTERNAL PROVIDER;
+    CREATE LOGIN [purviewxxxxxxx] FROM EXTERNAL PROVIDER;
     GO
 
-    CREATE USER purviewxxxxxxx FOR LOGIN purviewxxxxxxx;
+    CREATE USER [purviewxxxxxxx] FOR LOGIN [purviewxxxxxxx];
     GO
 
-    ALTER ROLE db_datareader ADD MEMBER purviewxxxxxxx;
+    ALTER ROLE db_datareader ADD MEMBER [purviewxxxxxxx];
     GO
     ```
 
-8. Use o botão **▷ Executar** para executar o script, que cria um logon no pool sem servidor e um usuário no usuário **lakedb** para a identidade gerenciada usada pelo Microsoft Purview e adiciona o usuário à função **db_datareader** no banco de dados **lakedb**.
-9. Crie um novo script vazio para o banco de dados do pool de SQL decicado **sql*xxxxxxx*** e use-o para executar o seguinte código SQL (substituindo ***purviewxxxxxxx*** pelo nome de identidade gerenciada para sua conta do Microsoft Purview), que cria um usuário no pool de SQL dedicado para a identidade gerenciada usada pelo Microsoft Purview e o adiciona à função **db_datareader** no banco de dados **sql*xxxxxxx***.
+3. Use o botão **&#9655; Executar** para executar o script, que cria um logon e um usuário no usuário **lakedb** para a identidade gerenciada usada pelo Microsoft Purview e adiciona o usuário à função **db_datareader** no banco de dados **lakedb**.
+4. Crie um novo script vazio para o banco de dados do pool de SQL decicado **sql*xxxxxxx*** e use-o para executar o seguinte código SQL (substituindo ***purviewxxxxxxx*** pelo nome de identidade gerenciada para sua conta do Microsoft Purview), que cria um usuário no pool de SQL dedicado para a identidade gerenciada usada pelo Microsoft Purview e o adiciona à função **db_datareader** no banco de dados **sql*xxxxxxx***.
 
     ```sql
-    CREATE USER purviewxxxxxxx FROM EXTERNAL PROVIDER;
+    CREATE USER [purviewxxxxxxx] FROM EXTERNAL PROVIDER;
     GO
 
-    EXEC sp_addrolemember 'db_datareader', purviewxxxxxxx;
+    EXEC sp_addrolemember 'db_datareader', [purviewxxxxxxx];
     GO
     ```
+
+## Usar o Microsoft Purview para examinar recursos de dados
+
+Agora que você configurou o acesso necessário para que o Microsoft Purview verifique as fontes de dados usadas pelo seu workspace do Azure Synapse Analytics, você pode registrá-las em seu catálogo do Microsoft Purview.
 
 ### Registre as fontes no catálogo do Microsoft Purview
 
-Agora que você configurou o acesso necessário para que o Microsoft Purview verifique as fontes de dados usadas pelo seu workspace do Azure Synapse Analytics, você pode registrá-las em seu catálogo do Microsoft Purview.
+Com o Microsoft Purview, você pode catalogar ativos de dados em todo o seu estado de dados, incluindo fontes de dados em um Workspace do Azure Synapse. O espaço de trabalho que você acabou de implantar inclui um data lake (em uma conta do Azure Data Lake Storage Gen2), um banco de dados lake e um data warehouse em um pool de SQL dedicado.
 
 1. Volte para a guia do navegador que contém o portal do Azure e exiba a página do grupo de recursos **dp203-*xxxxxxx***.
 2. Abra a conta do Microsoft Purview **purview*xxxxxxx*** e, na página **Visão Geral**, use o link para abrir o **Portal de Governança do Microsoft Purview** em uma nova guia - entrando, se solicitado.
@@ -197,7 +192,7 @@ Agora que você configurou o acesso necessário para que o Microsoft Purview ver
     >**Dica**: Como alternativa, você pode navegar diretamente para https://web.purview.azure.com uma nova guia do navegador.
 
 3. No lado esquerdo do Portal de Governança do Azure Purview, use o ícone **&rsaquo;&rsaquo;** para expandir o menu - isso revela as diferentes páginas dentro do portal.
-4. Na página **Mapa de dados**, na subpágina **Códigos-fonte**, selecione **Registrar**:
+4. Na página **Mapa de dados**, na subpágina **Fontes de dados**, selecione **Registrar**:
 
     ![Captura de tela da página Mapa de dados no Portal de Governança do Microsoft Purview.](./images/purview-register.png)
 
