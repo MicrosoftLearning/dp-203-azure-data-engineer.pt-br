@@ -55,8 +55,8 @@ O script provisiona um espaço de trabalho do Azure Synapse Analytics e uma cont
 
 ### Exibir arquivos no data lake
 
-1. Depois que o script for concluído, no portal do Azure, vá para o grupo de recursos **dp500-*xxxxxxx*** que ele criou e selecione seu workspace Sinapse.
-2. Na página **Visão geral** do seu workspace Synapse, no cartão **Abrir Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
+1. Depois que o script for concluído, no portal do Azure, vá para o Azure Storage **dp203-*xxxxxxx*** que ele criou e selecione seu espaço de trabalho Synapse.
+2. Na página **Visão geral** do seu workspace do Synapse, no cartão **Abrir o Synapse Studio**, selecione **Abrir** para abrir o Synapse Studio em uma nova guia do navegador, fazendo login se solicitado.
 3. No lado esquerdo do Synapse Studio, use o ícone **&rsaquo;&rsaquo;** para expandir o menu, o que revela as diferentes páginas do Synapse Studio usadas para gerenciar recursos e executar tarefas de análise de dados.
 4. Na página **Gerenciar**, selecione a guia **Pools do Apache Spark** e observe que um pool do Spark com um nome semelhante ao **spark*xxxxxxx*** foi provisionado no workspace. Posteriormente, você usará esse pool do Spark para carregar e analisar dados de arquivos no armazenamento do data lake para o workspace.
 5. Na página **Dados**, exiba a guia **Vinculado** e verifique se seu workspace inclui um link para sua conta de armazenamento do Azure Data Lake Storage Gen2, que deve ter um nome semelhante à **sinapse*xxxxxxx* (Principal – datalake*xxxxxxx*)**.
@@ -424,8 +424,8 @@ Se você terminou de explorar Azure Synapse Analytics, exclua os recursos que cr
 
 1. Feche a guia do navegador do Synapse Studio e retorne ao portal do Azure.
 2. No portal do Azure, na **Página Inicial**, selecione **Grupos de recursos**.
-3. Selecione o grupo de recursos **dp500-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento e o pool do Spark para seu workspace.
+3. Selecione o grupo de recursos **dp203-*xxxxxxx*** para o workspace do Synapse Analytics (não o grupo de recursos gerenciado) e verifique se ele contém o workspace do Synapse, a conta de armazenamento e o pool do Spark para seu workspace.
 4. Na parte superior da página de **Visão Geral** do grupo de recursos, selecione **Excluir o grupo de recursos**.
-5. Digite o nome do grupo de recursos **dp500-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
+5. Digite o nome do grupo de recursos **dp203-*xxxxxxx*** para confirmar que deseja excluí-lo e selecione **Excluir**.
 
-    Após alguns minutos, seu grupo de recursos do workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
+    Após alguns minutos, o grupo de recursos de seu workspace do Azure Synapse e o grupo de recursos do workspace gerenciado associado a ele serão excluídos.
