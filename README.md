@@ -1,3 +1,11 @@
+#README
+
+We've turned off the ability to report issues directly on this repo and do not monitor PRs.
+
+Provide feedback here: https://aka.ms/provide-feedback
+
+Or, if you are a trainer with a microsoft.com email address, please create a ticket in AzDO.
+
 # DP-203: Engenheiro de dados do Azure
 
 Este repositório contém instruções e recursos para exercícios práticos no Microsoft Official Courseware para apoiar a certificação [Microsoft Certified: Azure Data Engineer Associate](https://learn.microsoft.com/certifications/azure-data-engineer/). Os exercícios são projetados para complementar os módulos de treinamento associados no [Microsoft Learn](https://learn.microsoft.com/training), e um <u>subconjunto</u> desses exercícios compreende os laboratórios práticos no curso de treinamento oficial com instrutor [DP-203T00: Data Engineering on Microsoft Azure](https://learn.microsoft.com/training/courses/dp-203t00).
